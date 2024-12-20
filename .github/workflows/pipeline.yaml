@@ -17,6 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
           
+      # Configure credentials    
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::216989096559:role/Infrastructure-role
+          aws-region: eu-west-3
+
       # Log in to Amazon ECR
       - name: Log in to Amazon ECR
         id: login-ecr
@@ -30,5 +37,5 @@ jobs:
       # Push the Docker image to Amazon ECR
       - name: Push Docker image to ECR
         run: |
-          docker tag TWIMChat:latest 216989096559.dkr.ecr.eu-west-3.amazonaws.com/TWIMChat:latest
-          docker push 216989096559.dkr.ecr.eu-west-3.amazonaws.com/TWIMChat:latest
+          docker tag TWIMChat:latest 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/TWIMChat:latest
+          docker push 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/TWIMChat:latest
