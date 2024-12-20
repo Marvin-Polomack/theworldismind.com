@@ -1,10 +1,18 @@
 name: Deploy to ECS
-
 on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Choose the deployment environment
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+          - development
 jobs:
   build:
     permissions:
