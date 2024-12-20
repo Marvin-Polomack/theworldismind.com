@@ -43,10 +43,10 @@ jobs:
       # Build and tag the Docker image
       - name: Build Docker image
         run: |
-          docker build -t TWIMChat:latest .
+          docker build -t twimchat:latest .
 
       # Push the Docker image to Amazon ECR
       - name: Push Docker image to ECR
         run: |
-          docker tag TWIMChat:latest 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/TWIMChat:latest
-          docker push 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/TWIMChat:latest
+          docker tag twimchat:latest 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/twimchat:latest
+          docker push 216989096559.dkr.ecr.eu-west-3.amazonaws.com/freelance-ecr/twimchat:latest
