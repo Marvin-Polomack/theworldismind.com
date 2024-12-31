@@ -1,7 +1,11 @@
+
 # Stage 1: Build the application
-FROM node:22 AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
+
+# Install build dependencies for Alpine
+RUN apk add --no-cache python3 make g++
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -16,7 +20,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application
-FROM node:22
+FROM node:22-alpine
 
 WORKDIR /app
 
