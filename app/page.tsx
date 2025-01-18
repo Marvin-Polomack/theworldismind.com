@@ -1,14 +1,11 @@
-import { Suspense } from 'react';
-import ChatInterface from '@/app/components/ChatInterface';
-import WelcomeScreen from '@/app/components/WelcomeScreen';
+import WelcomeScreen from '@/components/WelcomeScreen';
+import { DarkMode } from '@/components/Darkmode';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <Suspense fallback={<div>Loading...</div>}>
-        <WelcomeScreen />
-        <ChatInterface />
-      </Suspense>
+    <main className="relative">
+      <DarkMode />
+      <WelcomeScreen />
     </main>
   );
 }
