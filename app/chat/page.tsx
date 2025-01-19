@@ -15,21 +15,16 @@ export default async function ChatPage() {
     return redirect('/signin?redirect=/chat');
   } else {
     return (
-      // <ChatContainer>
+      <ChatContainer>
       <div className="relative flex justify-between flex-col items-center overflow-hidden h-screen">
         <div className="flex flex-col items-center w-full h-full">
-          {/* <MagicCard
-            title={`TWIM Chat ${user.email}`}
-            className='py-6 flex flex-col items-center justify-center'
-          > */}
             <ChatInterface />
-          {/* </MagicCard> */}
         </div>
         <div className="flex items-center w-full">
           <DockWrapper />
         </div>
       </div>
-      // {/* </ChatContainer> */}
+      </ChatContainer>
     );
   }
 }
