@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, ReactPortal, ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -10,12 +10,12 @@ type SupabaseContext = {
   supabase: SupabaseClient<Database>;
 };
 
-const Context = createContext<SupabaseContext | undefined>(undefined);
+const Context = createContext<SupabaseContext | null>(null);
 
 export default function SupabaseProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [supabase] = useState(() =>
     createBrowserClient<Database>(

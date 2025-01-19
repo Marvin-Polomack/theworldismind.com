@@ -15,7 +15,7 @@ export default async function ChatPage() {
     return redirect('/signin?redirect=/chat');
   } else {
     return (
-      <ChatContainer>
+      // <ChatContainer>
       <div className="relative flex justify-between flex-col items-center overflow-hidden h-screen">
         <div className="flex flex-col items-center w-full h-full">
           {/* <MagicCard
@@ -29,7 +29,7 @@ export default async function ChatPage() {
           <DockWrapper />
         </div>
       </div>
-      </ChatContainer>
+      // {/* </ChatContainer> */}
     );
   }
 }

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button/button';
 import { signInWithOAuth } from '@/utils/auth-helpers/client';
 import { type Provider } from '@supabase/supabase-js';
 import { ImGithub } from "react-icons/im";
-import { useState } from 'react';
+import { useState, JSX } from 'react';
 import { Loader2 } from "lucide-react";
 
 type OAuthProviders = {

@@ -21,17 +21,17 @@ export default async function SignIn({
   params,
   searchParams
 }: {
-  params: { id: string };
-  searchParams: { disable_button: boolean };
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ disable_button?: boolean }>
 }) {
   const { allowOauth, allowEmail, allowPassword } = getAuthTypes();
   const viewTypes = getViewTypes();
   const redirectMethod = getRedirectMethod();
   const { id } = await params;
+  const { disable_button } = await searchParams;
 
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string;
-
 
   // Assign url id to 'viewProp' if it's a valid string and ViewTypes includes it
   if (typeof id === 'string' && viewTypes.includes(id)) {
@@ -86,14 +86,14 @@ export default async function SignIn({
             <EmailSignIn
               allowPassword={allowPassword}
               redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
+              disableButton={Boolean(disable_button)}
             />
           )}
           {viewProp === 'forgot_password' && (
             <ForgotPassword
               allowEmail={allowEmail}
               redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
+              disableButton={Boolean(disable_button)}
             />
           )}
           {viewProp === 'update_password' && (

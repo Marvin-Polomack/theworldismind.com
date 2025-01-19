@@ -51,7 +51,7 @@ export default function ChatInterface() {
   <ChatContainer className="flex flex-col h-full w-full">
     
     {!isEmpty ? (
-      <ChatMessages>
+      <ChatMessages messages={messages}>
         <MessageList messages={messages} isTyping={isTyping} />
       </ChatMessages>
     ) : null}
