@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import ShinyButton from "@/components/ui/shiny-button";
+import ShinyButton from "@/components/ui/misc/shiny-button";
 
-import { toast } from "@/components/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
 import {
   Form,
   FormControl,
@@ -14,12 +14,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/misc/form"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
+} from "@/components/ui/misc/input-otp"
 import { useRouter, useSearchParams } from "next/navigation"
 
 const FormSchema = z.object({

@@ -85,8 +85,8 @@ export default function MagicCard({
       className={cn("group relative flex size-full rounded-xl", className)}
     >
       <div className="absolute inset-px z-10 rounded-xl bg-background" />
-      <div className="relative z-20">
-        <h3 className="mb-1 text-2xl font-medium">{title}</h3>
+      <h3 className="mb-1 z-20 text-2xl font-medium">{title}</h3>
+      <div className="relative z-20 h-full w-full p-5">
         <p className="">{description}</p>
           {children}
       </div>

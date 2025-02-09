@@ -5,12 +5,12 @@ import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react"
 
 import { cn } from "@/utils/cn"
 import { useAutoScroll } from "@/hooks/use-auto-scroll"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/misc/button"
 import { type Message } from "@/components/ui/Chat/AiChat/chat-message"
-import { CopyButton } from "@/components/ui/copy-button"
+import { CopyButton } from "@/components/ui/misc/copy-button"
 import { MessageInput } from "@/components/ui/Chat/AiChat/message-input"
 import { MessageList } from "@/components/ui/Chat/AiChat/message-list"
-import { PromptSuggestions } from "@/components/ui/prompt-suggestions"
+import { PromptSuggestions } from "@/components/ui/misc/prompt-suggestions"
 
 interface ChatPropsBase {
   handleSubmit: (

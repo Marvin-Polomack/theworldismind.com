@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Code2, Loader2, Terminal } from "lucide-react"
 
 import { cn } from "@/utils/cn"
-import { FilePreview } from "@/components/ui/file-preview"
+import { FilePreview } from "@/components/ui/misc/file-preview"
 import { MarkdownRenderer } from "@/components/ui/Chat/AiChat/markdown-renderer"
 
 const chatBubbleVariants = cva(

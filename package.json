@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@mynaui/icons-react": "^0.3.3",
     "@next/swc-wasm-nodejs": "13.5.8",
     "@nextui-org/button": "^2.2.9",
     "@nextui-org/system": "^2.4.6",
@@ -59,7 +60,7 @@
     "embla-carousel-react": "^8.5.1",
     "eslint": "9.17.0",
     "eslint-config-next": "^15.1.2",
-    "framer-motion": "^11.18.0",
+    "framer-motion": "^11.18.2",
     "funda-ui": "^4.5.657",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.469.0",

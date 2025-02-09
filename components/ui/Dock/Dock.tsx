@@ -5,16 +5,16 @@ import { CalendarIcon, HomeIcon, MailIcon, PencilIcon } from "lucide-react";
 import Link from "next/link";
 
 import { DarkMode } from "@/components/Darkmode";
-import { buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/misc/button";
+import { Separator } from "@/components/ui/misc/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/misc/tooltip";
 import { cn } from "@/utils/cn";
-import { Dock, DockIcon } from "@/components/ui/dock";
+import { Dock, DockIcon } from "@/components/ui/misc/dock";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -64,7 +64,7 @@ const Icons = {
 
 const DATA = {
   navbar: [
-    { href: "#", icon: HomeIcon, label: "Home" },
+    { href: "/", icon: HomeIcon, label: "Home" },
     { href: "#", icon: PencilIcon, label: "Blog" },
   ],
   contact: {

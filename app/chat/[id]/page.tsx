@@ -1,9 +1,11 @@
+import ChatInterface from "@/components/ChatInterface";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from 'next/navigation';
 import { getUser } from '@/utils/supabase/queries';
-import DataTable from "@/components/ui/Data/DataTable";
-import DockWrapper from "@/components/DockWrapper";
 import MagicCard from "@/components/ui/MagicCard";
+import { DockElement } from "@/components/ui/Dock/Dock";
+import DockWrapper from "@/components/DockWrapper";
+import ChatContainer from "@/components/ChatContainer";
 
 export default async function ChatPage() {
   const supabase = await createClient();
@@ -14,16 +16,16 @@ export default async function ChatPage() {
   } else {
     return (
       <div className="relative h-screen">
+      <ChatContainer>
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
-        <div className="relative bottom-0" >
-          <MagicCard  title={`TWIM Chat`} className='relative py-6 flex flex-col items-center mx-auto'>
-            <DataTable />
-          </MagicCard>
+        <div className="relative bottom-0" style={{ width: "90%", height: "85%" }}>
+            <ChatInterface />
         </div>
-        <div className="absolute flex items-center w-full bottom-3">
+        <div className="flex items-center w-full">
           <DockWrapper />
         </div>
       </div>
+      </ChatContainer>
       </div>
     );
   }

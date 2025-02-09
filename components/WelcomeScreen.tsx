@@ -3,9 +3,9 @@
 import { useTheme } from "next-themes";
 // import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import FlipText from "@/components/ui/flip-text";
-import { TextAnimate } from "@/components/ui/text-animate";
-import ShinyButton from "@/components/ui/shiny-button";
+import FlipText from "@/components/ui/misc/flip-text";
+import { TextAnimate } from "@/components/ui/misc/text-animate";
+import ShinyButton from "@/components/ui/misc/shiny-button";
 
 export default function WelcomeScreen() {
   const router = useRouter();
