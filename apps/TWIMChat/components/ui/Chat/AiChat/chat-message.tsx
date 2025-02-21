@@ -75,12 +75,14 @@ interface ToolResult {
 type ToolInvocation = PartialToolCall | ToolCall | ToolResult
 
 export interface Message {
-  id: string
-  role: "user" | "assistant" | (string & {})
-  content: string
-  createdAt?: Date
+  id: number
+  role: "sender" | "receiver"
+  message: string
+  created_at?: Date
   experimental_attachments?: Attachment[]
   toolInvocations?: ToolInvocation[]
+  room_id: string;
+  sender_id: string;
 }
 
 export interface ChatMessageProps extends Message {
@@ -92,8 +94,8 @@ export interface ChatMessageProps extends Message {
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   role,
-  content,
-  createdAt,
+  message,
+  created_at,
   showTimeStamp = false,
   animation = "scale",
   actions,
@@ -113,9 +115,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     return <ToolCall toolInvocations={toolInvocations} />
   }
 
-  const isUser = role === "user"
+  const isUser = role === "sender"
 
-  const formattedTime = createdAt?.toLocaleTimeString("en-US", {
+  const formattedTime = created_at?.toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
   })
@@ -132,19 +134,19 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
       <div className={cn(chatBubbleVariants({ isUser, animation }), className)}>
         <div>
-          <MarkdownRenderer>{content}</MarkdownRenderer>
+          <MarkdownRenderer>{message}</MarkdownRenderer>
         </div>
 
-        {role === "assistant" && actions ? (
+        {/* {role === "assistant" && actions ? (
           <div className="absolute -bottom-4 right-2 flex space-x-1 rounded-lg border bg-background p-1 text-foreground opacity-0 transition-opacity group-hover/message:opacity-100">
             {actions}
           </div>
-        ) : null}
+        ) : null} */}
       </div>
 
-      {showTimeStamp && createdAt ? (
+      {showTimeStamp && created_at ? (
         <time
-          dateTime={createdAt.toISOString()}
+          dateTime={created_at.toISOString()}
           className={cn(
             "mt-1 block px-1 text-xs opacity-50",
             animation !== "none" && "duration-500 animate-in fade-in-0"

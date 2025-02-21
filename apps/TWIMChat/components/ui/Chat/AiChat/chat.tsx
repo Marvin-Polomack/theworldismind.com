@@ -55,7 +55,7 @@ export function Chat({
 }: ChatProps) {
   const lastMessage = messages.at(-1)
   const isEmpty = messages.length === 0
-  const isTyping = lastMessage?.role === "user"
+  const isTyping = lastMessage?.role === "receiver"
 
   const messageOptions = useCallback(
     (message: Message) => ({
@@ -63,7 +63,7 @@ export function Chat({
         <>
           <div className="border-r pr-1">
             <CopyButton
-              content={message.content}
+              content={message.message}
               copyMessage="Copied response to clipboard!"
             />
           </div>
@@ -71,7 +71,7 @@ export function Chat({
             size="icon"
             variant="ghost"
             className="h-6 w-6"
-            onClick={() => onRateResponse(message.id, "thumbs-up")}
+            onClick={() => onRateResponse(message.id.toString(), "thumbs-up")}
           >
             <ThumbsUp className="h-4 w-4" />
           </Button>
@@ -79,14 +79,14 @@ export function Chat({
             size="icon"
             variant="ghost"
             className="h-6 w-6"
-            onClick={() => onRateResponse(message.id, "thumbs-down")}
+            onClick={() => onRateResponse(message.id.toString(), "thumbs-down")}
           >
             <ThumbsDown className="h-4 w-4" />
           </Button>
         </>
       ) : (
         <CopyButton
-          content={message.content}
+          content={message.message}
           copyMessage="Copied response to clipboard!"
         />
       ),

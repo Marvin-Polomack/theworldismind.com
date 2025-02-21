@@ -80,3 +80,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes breathe {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(0.5); }
+  100% { filter: brightness(1); }
+}
+.svg-logo {
+  display: inline-block; /* ensure it can animate properly */
+  animation: breathe 3s ease-in-out infinite;
+}

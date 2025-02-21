@@ -9,12 +9,10 @@ import { useContext, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/Button/button";
 import { Rnd } from "react-rnd";
 import MagicCard from "@/components/ui/MagicCard";
-import { DockContext } from "@/components/ChatContainer";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import { FaArrowCircleUp } from "react-icons/fa";
 
 export default function ChatInterface() {
-  const { dockPosition } = useContext(DockContext)
 
   const {
     messages,
@@ -47,10 +45,10 @@ export default function ChatInterface() {
   // >
   <MagicCard
     title={`TWIM Chat`}
-    className='relative py-6 flex flex-col items-center mx-auto'
+    className='relative py-6 flex flex-col items-center mx-auto overflow-hidden'
   >
-    <div className="relative flex flex-col" style={{ height: "92 %" }}>
-    <ChatMessageList className="relative flex" >
+    <div className="relative flex flex-col" style={{ height: "92%" }}>
+    <ChatMessageList className="relative flex">
       <ChatBubble variant='sent'>
         <ChatBubbleAvatar fallback='US' />
         <ChatBubbleMessage variant='sent'>
@@ -71,32 +69,30 @@ export default function ChatInterface() {
       </ChatBubble>
     </ChatMessageList>
     </div>
-    <div className="relative flex flex-col h-1/6">
-    <form
-        className="relative w-full bottom-0 bg-background rounded-lg border focus-within:ring-1 focus-within:ring-ring"
+
+    <div className="w-full px-2 relative" style={{ height: "8%" }}>
+    <div className="absolute left-0 right-0 flex flex-col h-full bottom-0">
+      <form
+        className="w-full bg-background rounded-lg border focus-within:ring-1 focus-within:ring-ring"
       >
-        <div className="relative bottom-0 flex p-3">
+        <div className="relative flex p-3">
           <ChatInput
             placeholder="Type your message here..."
             className="w-full bg-background min-h-12 rounded-lg border-0 p-3 shadow-none focus-visible:ring-0"
           />
-          <div className="absolute flex items-center right-3 top-3 p-3 space-x-2 pt-0">
+          <div className="absolute flex items-center right-3 top-3 space-x-2">
             <Button variant="ghost" size="icon">
               <HiOutlinePaperClip />
             </Button>
-
-            <Button
-              size="sm"
-              className="ml-auto gap-1.5"
-            >
+            <Button size="sm" className="ml-auto gap-1.5">
               Send Message
               <FaArrowCircleUp />
             </Button>
           </div>
         </div>
       </form>
-      </div>
+    </div>
+    </div>
   </MagicCard>
   // </Rnd>
-  );
-}
+  );}

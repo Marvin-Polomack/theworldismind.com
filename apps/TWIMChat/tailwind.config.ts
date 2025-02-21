@@ -78,10 +78,14 @@ const config: Config = {
   					height: 'var(--radix-accordion-content-height)'
   				}
   			},
-        "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
-        },
+  			'caret-blink': {
+  				'0%,70%,100%': {
+  					opacity: '1'
+  				},
+  				'20%,50%': {
+  					opacity: '0'
+  				}
+  			},
   			'accordion-up': {
   				from: {
   					height: 'var(--radix-accordion-content-height)'
@@ -108,14 +112,29 @@ const config: Config = {
   				'20%': {
   					transform: 'translateY(-0.25rem)'
   				}
+  			},
+  			'border-beam': {
+  				'100%': {
+  					'offset-distance': '100%'
+  				}
+  			},
+  			ripple: {
+  				'0%, 100%': {
+  					transform: 'translate(-50%, -50%) scale(1)'
+  				},
+  				'50%': {
+  					transform: 'translate(-50%, -50%) scale(0.9)'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
+  			'caret-blink': 'caret-blink 1.25s ease-out infinite',
   			shine: 'shine var(--duration) infinite linear',
-  			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite'
+  			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite',
+  			'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+  			ripple: 'ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite'
   		}
   	}
   },

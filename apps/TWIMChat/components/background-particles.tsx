@@ -24,7 +24,7 @@ const BackgroundParticles = () => {
   return (
     <div className="fixed flex inset-0 w-full items-center justify-center">
       {theme === "dark" ? (
-        <TwimLogoBlack className="h-screen py-20 opacity-25 light:color-black" />
+        <TwimLogoBlack className="svg-logo h-screen py-20 opacity-25 light:color-black" />
       ) : (
         <TwimLogoWhite className="h-screen py-20 opacity-25 light:color-black" />
       )}

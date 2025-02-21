@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const search = searchParams.get("search") || "";
   const sort = searchParams.get("sort") || "rooms_count"; // Not used in function but available if needed.
   const order_direction = searchParams.get("order") || "desc";
-  const limit_count = parseInt(searchParams.get("limit") || "5", 10);
+  const limit_count = parseInt(searchParams.get("limit") || "", 5);
 
   // Call the RPC function you defined in your database.
   const { data, error } = await supabase.schema("chat").rpc("get_topics_with_rooms", {

@@ -15,6 +15,11 @@ export default function WelcomeScreen() {
     router.push("/chat");
   }
 
+  const storeHandleClick = () => {
+    // Redirect to store.theworldismind.com
+    window.location.href = "https://store.theworldismind.com";
+  }
+
   return (
     <>
       <div className="relative overflow-hidden py-24 lg:py-32 min-h-screen flex items-center justify-center">
@@ -44,8 +49,10 @@ export default function WelcomeScreen() {
               >
                 TWIM Chat
               </ShinyButton>
-              <ShinyButton>
-                Learn more
+              <ShinyButton
+                onClick={storeHandleClick}
+              >
+                TWIM Store
               </ShinyButton>
             </div>
           </div>
