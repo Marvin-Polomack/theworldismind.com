@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { CalendarIcon, HomeIcon, MailIcon, PencilIcon } from "lucide-react";
+import { CalendarIcon, HomeIcon, MailIcon, PencilIcon, LogOut } from "lucide-react";
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/misc/button";
@@ -69,6 +69,15 @@ const DATA = {
       },
     },
   },
+  session: {
+    actions: {
+      logout: {
+          label: "Se déconnecter",
+          icon: LogOut,
+          href: "/api/auth/signout",
+        },
+    },
+  },
 };
 
 function DockElementImpl(
@@ -132,6 +141,28 @@ function DockElementImpl(
               </TooltipTrigger>
               <TooltipContent>
                 <p>{name}</p>
+              </TooltipContent>
+            </Tooltip>
+          </DockIcon>
+        ))}
+        <Separator orientation="vertical" className="h-full" />
+        {Object.entries(DATA.session.actions).map(([name, action]) => (
+          <DockIcon key={name}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={action.href!}
+                  aria-label={action.label}
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "size-12 rounded-full"
+                  )}
+                >
+                  <action.icon className="size-4" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{action.label}</p>
               </TooltipContent>
             </Tooltip>
           </DockIcon>
