@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from "@/utils/supabase/queries";
-import { prop } from 'remeda';
 
 type Props = {
   params: Promise<{

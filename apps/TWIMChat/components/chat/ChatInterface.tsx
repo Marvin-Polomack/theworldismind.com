@@ -40,7 +40,6 @@ export default function ChatInterface({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const {
-    messages,
     input,
     handleInputChange,
     // we won’t use the original handleSubmit
@@ -48,14 +47,14 @@ export default function ChatInterface({
 
   // Fetch initial messages
   const fetchMessages = async () => {
-    const res = await fetch(`/api/chat/${roomId}/messages?userId=${userId}`);
+    const res = await fetch(`/api/chat/${roomId}/messages`);
     const messages = await res.json();
     setChatMessages(messages);
   };
 
   useEffect(() => {
     fetchMessages();
-  }, [roomId, userId]);
+  }, [roomId]);
 
   const handleTyping = async () => {
     await supabase

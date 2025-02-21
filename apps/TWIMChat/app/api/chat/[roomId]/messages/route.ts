@@ -1,6 +1,6 @@
 // File: app/api/chat/[roomId]/messages/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/server';
 import { getUser } from "@/utils/supabase/queries";
 
 type Props = {
