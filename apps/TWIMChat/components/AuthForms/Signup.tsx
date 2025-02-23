@@ -75,13 +75,13 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       </form>
       <p>Vous avez déjà un compte ?</p>
       <p>
-        <Link href="/signin/password_signin" className="font-light text-sm">
+        <Link href="/signin/password_signin" className="font-light text-sm hover:underline">
           Connectez-vous avec votre e-mail et mot de passe
         </Link>
       </p>
       {allowEmail && (
         <p>
-          <Link href="/signin/email_signin" className="font-light text-sm">
+          <Link href="/signin/email_signin" className="font-light text-sm hover:underline">
             Connectez-vous via un lien magique
           </Link>
         </p>

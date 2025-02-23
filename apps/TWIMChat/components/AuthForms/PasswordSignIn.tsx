@@ -8,7 +8,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Loader2 } from "lucide-react";
 
-// Define prop type with allowEmail boolean
 interface PasswordSignInProps {
   allowEmail: boolean;
   redirectMethod: string;
@@ -22,30 +21,24 @@ export default function PasswordSignIn({
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect to the original page after successful sign-in
   const redirectTo = searchParams.get('redirect');
-
   const redirectLink = redirectTo ? `/signin/signup?redirect=${redirectTo}` : `/signin/signup`;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
+    setIsSubmitting(true);
     await handleRequest(e, signInWithPassword, router, redirectTo);
     setIsSubmitting(false);
   };
 
   return (
     <div className="my-8">
-      <form
-        noValidate={true}
-        className="mb-4"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      <form noValidate className="mb-4" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Adresse e-mail</label>
             <input
               id="email"
-              placeholder="name@example.com"
+              placeholder="nom@exemple.com"
               type="email"
               name="email"
               autoCapitalize="none"
@@ -53,10 +46,10 @@ export default function PasswordSignIn({
               autoCorrect="off"
               className="w-full p-3 rounded-md bg-zinc-800"
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mot de passe</label>
             <input
               id="password"
-              placeholder="Password"
+              placeholder="Mot de passe"
               type="password"
               name="password"
               autoComplete="current-password"
@@ -72,29 +65,32 @@ export default function PasswordSignIn({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Connexion en cours...
               </>
             ) : (
-              "Sign in"
+              "Se connecter"
             )}
           </Button>
+          <p className="text-xs text-gray-500">
+            Pour consulter notre politique de confidentialité, cliquez <Link href="/gdpr" className="underline">ici</Link>.
+          </p>
         </div>
       </form>
       <p>
-        <Link href="/signin/forgot_password" className="font-light text-sm">
-          Forgot your password?
+        <Link href="/signin/forgot_password" className="font-light text-sm hover:underline">
+          Mot de passe oublié ?
         </Link>
       </p>
       {allowEmail && (
         <p>
-          <Link href="/signin/email_signin" className="font-light text-sm">
-            Sign in via magic link
+          <Link href="/signin/email_signin" className="font-light text-sm hover:underline">
+            Se connecter via lien magique
           </Link>
         </p>
       )}
       <p>
-        <Link href={redirectLink} className="font-light text-sm">
-          Don't have an account? Sign up
+        <Link href={redirectLink} className="font-light text-sm hover:underline">
+          Vous n'avez pas de compte ? Inscrivez-vous
         </Link>
       </p>
     </div>
