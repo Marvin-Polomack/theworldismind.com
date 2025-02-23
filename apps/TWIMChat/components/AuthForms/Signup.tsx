@@ -4,12 +4,11 @@ import { Button } from '@/components/ui/Button/button';
 import React from 'react';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';;
+import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
 
-// Define prop type with allowEmail boolean
 interface SignUpProps {
   allowEmail: boolean;
   redirectMethod: string;
@@ -20,29 +19,23 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
 
-  
-  // Redirect to the original page after successful sign-in
   const redirectTo = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
+    setIsSubmitting(true); // Désactive le bouton pendant le traitement
     await handleRequest(e, signUp, router);
     setIsSubmitting(false);
   };
 
   return (
     <div className="my-8">
-      <form
-        noValidate={true}
-        className="mb-4"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      <form noValidate className="mb-4" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Adresse e-mail</label>
             <input
               id="email"
-              placeholder="name@example.com"
+              placeholder="nom@exemple.com"
               type="email"
               name="email"
               autoCapitalize="none"
@@ -50,10 +43,10 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoCorrect="off"
               className="w-full p-3 rounded-md bg-zinc-800"
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mot de passe</label>
             <input
               id="password"
-              placeholder="Password"
+              placeholder="Mot de passe"
               type="password"
               name="password"
               autoComplete="current-password"
@@ -69,24 +62,27 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Inscription en cours...
               </>
             ) : (
-              "Sign Up"
+              "S'inscrire"
             )}
           </Button>
+          <p className="text-xs text-center text-gray-500 mt-2">
+            En créant un compte, vous acceptez notre politique de confidentialité (<Link href="/gdpr" className="underline">ici</Link>).
+          </p>
         </div>
       </form>
-      <p>Already have an account?</p>
+      <p>Vous avez déjà un compte ?</p>
       <p>
         <Link href="/signin/password_signin" className="font-light text-sm">
-          Sign in with email and password
+          Connectez-vous avec votre e-mail et mot de passe
         </Link>
       </p>
       {allowEmail && (
         <p>
           <Link href="/signin/email_signin" className="font-light text-sm">
-            Sign in via magic link
+            Connectez-vous via un lien magique
           </Link>
         </p>
       )}

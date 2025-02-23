@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button/button';
 import { signInWithOAuth } from '@/utils/auth-helpers/client';
 import { type Provider } from '@supabase/supabase-js';
 import { ImGithub } from "react-icons/im";
+import { FcGoogle } from "react-icons/fc";
 import { useState, JSX } from 'react';
 import { Loader2 } from "lucide-react";
 
@@ -19,6 +20,11 @@ export default function OauthSignIn() {
       name: 'github',
       displayName: 'GitHub',
       icon: <ImGithub className="h-5 w-5" />
+    },
+    {
+      name: 'google',
+      displayName: 'Google',
+      icon: <FcGoogle className="h-5 w-5" />
     }
     /* Add desired OAuth providers here */
   ];

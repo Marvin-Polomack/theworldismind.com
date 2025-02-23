@@ -69,8 +69,8 @@ export default async function SignIn({
               : viewProp === 'update_password'
                 ? 'Update Password'
                 : viewProp === 'signup'
-                  ? 'Sign Up'
-                  : 'Sign In'
+                  ? 'Créer un compte'
+                  : 'Se connecter'
           }
           className='py-6 flex flex-col items-center justify-center'
         >
