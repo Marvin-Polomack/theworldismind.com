@@ -59,7 +59,7 @@ export default async function SignIn({
 
   return (
     <div className="flex justify-center h-screen">
-      <div className="flex flex-col justify-center p-3 m-auto w-80 ">
+      <div className="flex flex-col justify-center p-3 m-auto w-96 ">
         <MagicCard
           title={
             viewProp === 'forgot_password'
@@ -104,7 +104,7 @@ export default async function SignIn({
             viewProp !== 'signup' &&
             allowOauth && (
               <>
-                <Separator text="Third-party sign-in" />
+                <Separator text="Connexion via tiers" />
                 <OauthSignIn />
               </>
             )}

@@ -8,6 +8,7 @@ import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
+import PasswordStrength from '../ui/input/PasswordStrength';
 
 interface SignUpProps {
   allowEmail: boolean;
@@ -17,6 +18,7 @@ interface SignUpProps {
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const searchParams = useSearchParams();
 
   const redirectTo = searchParams.get('redirect');
@@ -44,20 +46,13 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               className="w-full p-3 rounded-md bg-zinc-800"
             />
             <label htmlFor="password">Mot de passe</label>
-            <input
-              id="password"
-              placeholder="Mot de passe"
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
-            />
+            <PasswordStrength onStrengthChange={setPasswordStrength} />
           </div>
           <Button
             variant="default"
             type="submit"
             className="mt-1"
-            disabled={isSubmitting}
+            disabled={isSubmitting || passwordStrength < 100}
           >
             {isSubmitting ? (
               <>
