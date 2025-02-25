@@ -102,3 +102,14 @@
   background-size: 200% 100%;
   animation: shine 3s linear infinite;
 }
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
