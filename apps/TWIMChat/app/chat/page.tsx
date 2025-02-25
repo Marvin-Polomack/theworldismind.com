@@ -9,24 +9,23 @@ import MagicCard from "@/components/ui/MagicCard";
 import { RippleLogo } from "@/components/chat/ripple-logo";
 import { User } from "@supabase/supabase-js";
 import Loading from "@/app/loading";
-
+import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 export default function ChatPage() {
   const [matchmakingStarted, setMatchmakingStarted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
+  const menuLinks = [
+    { href: "/", label: "Home" },
+  ];
   // Function to check if the user already has an active room
   async function checkActiveRoom(currentUser: User) {
     const supabase = await createClient();
-    // Call the RPC function with the user_id parameter.
-    console.log("Calling RPC function with user_id:", currentUser.id);
     const { data: activeRooms, error } = await supabase.schema('chat').rpc("get_active_rooms_for_user", { p_user_id: currentUser.id });
-    console.log("Active rooms:", activeRooms);
     if (error) {
       console.error("Error checking active rooms:", error);
       return;
     }
     if (activeRooms && activeRooms.length > 0) {
-      // Assuming each room object has an "id" field.
       redirect(`/chat/${activeRooms[0].id}`);
     }
   }
@@ -62,7 +61,6 @@ export default function ChatPage() {
           },
           (payload) => {
             console.log("Matchmaking record deleted:", payload);
-            // After deletion, check for an active room and redirect if found.
             checkActiveRoom(user);
           }
         )
@@ -80,6 +78,7 @@ export default function ChatPage() {
 
   return (
     <div className="relative h-screen">
+      <MorphingMenu links={menuLinks} />
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
         <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
           <MagicCard title="Choisit ton sujet" className="relative py-6 flex flex-col items-center mx-auto">

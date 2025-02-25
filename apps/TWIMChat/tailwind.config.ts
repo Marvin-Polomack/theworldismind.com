@@ -95,15 +95,8 @@ const config: Config = {
   				}
   			},
   			shine: {
-  				'0%': {
-  					'background-position': '0% 0%'
-  				},
-  				'50%': {
-  					'background-position': '100% 100%'
-  				},
-  				to: {
-  					'background-position': '0% 0%'
-  				}
+  				'0%': { transform: 'translateX(-100%)' },
+  				'100%': { transform: 'translateX(100%)' }
   			},
   			'typing-dot-bounce': {
   				'0%,40%': {
@@ -125,6 +118,10 @@ const config: Config = {
   				'50%': {
   					transform: 'translate(-50%, -50%) scale(0.9)'
   				}
+  			},
+  			twinkle: {
+  				'0%, 100%': { opacity: '1' },
+  				'50%': { opacity: '0' }
   			}
   		},
   		animation: {
@@ -134,10 +131,13 @@ const config: Config = {
   			shine: 'shine var(--duration) infinite linear',
   			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite',
   			'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
-  			ripple: 'ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite'
+  			ripple: 'ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite',
+  			'shine-animated': 'shine 3s linear infinite',
+  			'twinkle': 'twinkle 1s ease-in-out infinite'
   		}
   	}
   },
   plugins: [require("tailwindcss-animate"), nextui()],
 };
+
 export default config;

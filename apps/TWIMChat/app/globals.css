@@ -86,7 +86,19 @@
   50% { filter: brightness(0.5); }
   100% { filter: brightness(1); }
 }
+
 .svg-logo {
   display: inline-block; /* ensure it can animate properly */
   animation: breathe 3s ease-in-out infinite;
+}
+
+.shine-animated {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shine 3s linear infinite;
 }

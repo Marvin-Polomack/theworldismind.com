@@ -1,3 +1,4 @@
+// https://ground.bossadizenith.me/docs/components/inputs/password-strength
 "use client";
 
 import { motion, useAnimationControls } from "framer-motion";

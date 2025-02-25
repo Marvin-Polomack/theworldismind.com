@@ -1,10 +1,15 @@
+'use client';
 import WelcomeScreen from '@/components/WelcomeScreen';
-import { DarkMode } from '@/components/Darkmode';
+import { useState } from 'react';
+import { DynamicIslandMenu } from '@/components/HamburgerMenu/HamburgerMenu';
 
 export default function Home() {
+
   return (
     <main className="relative">
-      {/* <DarkMode /> */}
+      {/* {isOpen && (
+        <DynamicIslandMenu />
+      )} */}
       <WelcomeScreen />
     </main>
   );
