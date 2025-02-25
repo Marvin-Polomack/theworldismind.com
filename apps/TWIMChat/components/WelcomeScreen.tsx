@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import FlipText from "@/components/ui/misc/flip-text";
 import { TextAnimate } from "@/components/ui/misc/text-animate";
 import ShinyButton from "@/components/ui/misc/shiny-button";
 import { PowerGlitch } from 'powerglitch';
