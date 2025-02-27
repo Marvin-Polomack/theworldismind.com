@@ -94,6 +94,7 @@ const PasswordStrength = ({ onStrengthChange }: PasswordStrengthProps) => {
               }}
               placeholder="Mot de passe"
               type={showPassword ? "text" : "password"}
+              name="password"
               className="h-full w-full outline-none border-none px-5 pr-12 z-10 text-muted-foreground"
             />
             <button

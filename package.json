@@ -42,6 +42,8 @@
   ],
   "dependencies": {
     "@auth/supabase-adapter": "^1.7.4",
+    "@heroui/react": "^2.7.2",
+    "@heroui/react-utils": "^2.1.7",
     "@next-auth/supabase-adapter": "^0.2.1",
     "@nextui-org/button": "^2.2.9",
     "@nextui-org/system": "^2.4.6",

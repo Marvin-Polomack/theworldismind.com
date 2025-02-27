@@ -103,8 +103,6 @@
   animation: shine 3s linear infinite;
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -112,4 +110,31 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+:root {
+  --toaster-bg: hsl(var(--background));
+  --toaster-text: hsl(var(--foreground));
+}
+
+[data-sonner-toaster][data-theme='dark'] {
+  --toaster-bg: hsl(var(--background));
+  --toaster-text: hsl(var(--foreground));
+}
+
+[data-sonner-toast] {
+  background: var(--toaster-bg);
+  color: var(--toaster-text);
+  border: 1px solid hsl(var(--border));
+  @apply shadow-lg;
+}
+
+[data-sonner-toast][data-type='error'] {
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+[data-sonner-toast][data-type='success'] {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }

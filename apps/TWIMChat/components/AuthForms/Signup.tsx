@@ -1,14 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/Button/button';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 import { Loader2 } from "lucide-react";
 import PasswordStrength from '../ui/input/PasswordStrength';
+import { toast } from "sonner";
 
 interface SignUpProps {
   allowEmail: boolean;
@@ -20,14 +20,27 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const searchParams = useSearchParams();
+  const errorTittle = searchParams.get('error');
+  const errorMessage = searchParams.get('error_description');
 
-  const redirectTo = searchParams.get('redirect');
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorTittle, {
+        description: errorMessage,
+        duration: 5000,
+        position: "top-right"
+      });
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Désactive le bouton pendant le traitement
+    e.preventDefault();
+    setIsSubmitting(true);
     await handleRequest(e, signUp, router);
     setIsSubmitting(false);
   };
+
+  const redirectTo = searchParams.get('redirect');
 
   return (
     <div className="my-8">

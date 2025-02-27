@@ -24,8 +24,8 @@ export async function SignOut(formData: FormData) {
   if (error) {
     return getErrorRedirect(
       pathName,
-      'Hmm... Something went wrong.',
-      'You could not be signed out.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Impossible de vous déconnecter."
     );
   }
 
@@ -42,8 +42,8 @@ export async function signInWithEmail(formData: FormData) {
   if (!isValidEmail(email)) {
     redirectPath = getErrorRedirect(
       '/signin/email_signin',
-      'Invalid email address.',
-      'Please try again.'
+      'Adresse e-mail invalide.',
+      'Veuillez réessayer.'
     );
   }
 
@@ -64,22 +64,22 @@ export async function signInWithEmail(formData: FormData) {
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/email_signin',
-      'You could not be signed in.',
+      "Impossible de vous connecter.",
       error.message
     );
   } else if (data) {
     cookieStore.set('preferredSignInView', 'email_signin', { path: '/' });
     redirectPath = getStatusRedirect(
       '/signin/email_signin',
-      'Success!',
-      'Please check your email for a magic link. You may now close this tab.',
+      'Succès !',
+      "Veuillez vérifier votre e-mail pour un lien magique. Vous pouvez maintenant fermer cet onglet.",
       true
     );
   } else {
     redirectPath = getErrorRedirect(
       '/signin/email_signin',
-      'Hmm... Something went wrong.',
-      'You could not be signed in.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Impossible de vous connecter."
     );
   }
 
@@ -96,8 +96,8 @@ export async function requestPasswordUpdate(formData: FormData) {
   if (!isValidEmail(email)) {
     redirectPath = getErrorRedirect(
       '/signin/forgot_password',
-      'Invalid email address.',
-      'Please try again.'
+      'Adresse e-mail invalide.',
+      'Veuillez réessayer.'
     );
   }
 
@@ -111,20 +111,20 @@ export async function requestPasswordUpdate(formData: FormData) {
     redirectPath = getErrorRedirect(
       '/signin/forgot_password',
       error.message,
-      'Please try again.'
+      'Veuillez réessayer.'
     );
   } else if (data) {
     redirectPath = getStatusRedirect(
       '/signin/forgot_password',
-      'Success!',
-      'Please check your email for a password reset link. You may now close this tab.',
+      'Succès !',
+      "Veuillez vérifier votre e-mail pour un lien de réinitialisation du mot de passe. Vous pouvez maintenant fermer cet onglet.",
       true
     );
   } else {
     redirectPath = getErrorRedirect(
       '/signin/forgot_password',
-      'Hmm... Something went wrong.',
-      'Password reset email could not be sent.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "L'e-mail de réinitialisation du mot de passe n'a pas pu être envoyé."
     );
   }
 
@@ -146,17 +146,17 @@ export async function signInWithPassword(formData: FormData) {
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',
-      'Sign in failed.',
+      'Échec de la connexion.',
       error.message
     );
   } else if (data.user) {
     cookieStore.set('preferredSignInView', 'password_signin', { path: '/' });
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect('/', 'Succès !', 'Vous êtes maintenant connecté.');
   } else {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',
-      'Hmm... Something went wrong.',
-      'You could not be signed in.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Impossible de vous connecter."
     );
   }
 
@@ -173,8 +173,8 @@ export async function signUp(formData: FormData) {
   if (!isValidEmail(email)) {
     redirectPath = getErrorRedirect(
       '/signin/signup',
-      'Invalid email address.',
-      'Please try again.'
+      'Adresse e-mail invalide.',
+      'Veuillez réessayer.'
     );
   }
 
@@ -190,11 +190,11 @@ export async function signUp(formData: FormData) {
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/signup',
-      'Sign up failed.',
+      'Création de compte impossible.',
       error.message
     );
   } else if (data.session) {
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect('/', 'Succès !', 'Vous êtes maintenant connecté.');
   } else if (
     data.user &&
     data.user.identities &&
@@ -202,20 +202,20 @@ export async function signUp(formData: FormData) {
   ) {
     redirectPath = getErrorRedirect(
       '/signin/signup',
-      'Sign up failed.',
-      'There is already an account associated with this email address. Try resetting your password.'
+      'Création de compte impossible.',
+      'Un compte existe déjà avec cette adresse email.'
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
       '/',
-      'Success!',
-      'Please check your email for a confirmation link. You may now close this tab.'
+      'Succès !',
+      "Veuillez vérifier votre e-mail pour un lien de confirmation. Vous pouvez maintenant fermer cet onglet."
     );
   } else {
     redirectPath = getErrorRedirect(
       '/signin/signup',
-      'Hmm... Something went wrong.',
-      'You could not be signed up.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Impossible de vous inscrire."
     );
   }
 
@@ -231,8 +231,8 @@ export async function updatePassword(formData: FormData) {
   if (password !== passwordConfirm) {
     redirectPath = getErrorRedirect(
       '/signin/update_password',
-      'Your password could not be updated.',
-      'Passwords do not match.'
+      "Votre mot de passe n'a pas pu être mis à jour.",
+      'Les mots de passe ne correspondent pas.'
     );
   }
 
@@ -244,20 +244,20 @@ export async function updatePassword(formData: FormData) {
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/update_password',
-      'Your password could not be updated.',
+      "Votre mot de passe n'a pas pu être mis à jour.",
       error.message
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
       '/',
-      'Success!',
-      'Your password has been updated.'
+      'Succès !',
+      'Votre mot de passe a été mis à jour.'
     );
   } else {
     redirectPath = getErrorRedirect(
       '/signin/update_password',
-      'Hmm... Something went wrong.',
-      'Your password could not be updated.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Votre mot de passe n'a pas pu être mis à jour."
     );
   }
 
@@ -272,15 +272,15 @@ export async function updateEmail(formData: FormData) {
   if (!isValidEmail(newEmail)) {
     return getErrorRedirect(
       '/account',
-      'Your email could not be updated.',
-      'Invalid email address.'
+      "Votre e-mail n'a pas pu être mis à jour.",
+      'Adresse e-mail invalide.'
     );
   }
 
   const supabase = await createClient();
 
   const callbackUrl = getURL(
-    getStatusRedirect('/account', 'Success!', `Your email has been updated.`)
+    getStatusRedirect('/account', 'Succès !', 'Votre e-mail a été mis à jour.')
   );
 
   const { error } = await supabase.auth.updateUser(
@@ -293,14 +293,14 @@ export async function updateEmail(formData: FormData) {
   if (error) {
     return getErrorRedirect(
       '/account',
-      'Your email could not be updated.',
+      "Votre e-mail n'a pas pu être mis à jour.",
       error.message
     );
   } else {
     return getStatusRedirect(
       '/account',
-      'Confirmation emails sent.',
-      `You will need to confirm the update by clicking the links sent to both the old and new email addresses.`
+      'Des e-mails de confirmation ont été envoyés.',
+      'Vous devrez confirmer la mise à jour en cliquant sur les liens envoyés à la fois à l\'ancienne et à la nouvelle adresse e-mail.'
     );
   }
 }
@@ -317,20 +317,20 @@ export async function updateName(formData: FormData) {
   if (error) {
     return getErrorRedirect(
       '/account',
-      'Your name could not be updated.',
+      "Votre nom n'a pas pu être mis à jour.",
       error.message
     );
   } else if (data.user) {
     return getStatusRedirect(
       '/account',
-      'Success!',
-      'Your name has been updated.'
+      'Succès !',
+      'Votre nom a été mis à jour.'
     );
   } else {
     return getErrorRedirect(
       '/account',
-      'Hmm... Something went wrong.',
-      'Your name could not be updated.'
+      "Hmm... Quelque chose s'est mal passé.",
+      "Votre nom n'a pas pu être mis à jour."
     );
   }
 }
