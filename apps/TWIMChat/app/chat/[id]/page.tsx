@@ -61,11 +61,12 @@ export default function ChatPage() {
 
         if (otherMemberError || !otherMember) {
           // Instead of showing an error, call the /api/chat/leave-room endpoint.
-          const leaveResponse = await fetch('/api/chat/leave-room', {
+          const leaveResponse = await fetch(`/api/chat/${roomId}/leave-room`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ leaveRoom: true, roomId: roomId }),
           });
+          console.log(leaveResponse);
           if (!leaveResponse.ok) {
             setError("Error leaving room.");
             setLoading(false);

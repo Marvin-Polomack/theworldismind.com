@@ -53,6 +53,7 @@
     "@types/react-icons": "^2.2.7",
     "@types/stripe": "^8.0.416",
     "clsx": "^2.1.1",
+    "compressorjs": "^1.2.1",
     "framer-motion": "^11.17.0",
     "hamburger-react": "^2.5.2",
     "lucide-react": "^0.471.0",

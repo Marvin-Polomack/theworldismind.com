@@ -48,6 +48,8 @@ export default function ChatPage() {
   // Setup realtime subscription when matchmaking has started.
   useEffect(() => {
     if (matchmakingStarted && user) {
+      checkActiveRoom(user);
+      console.log("Matchmaking started, setting up realtime subscription...");
       const supabase = createClient();
       const channel = supabase
         .channel("matchmaking_changes")
