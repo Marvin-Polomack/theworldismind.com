@@ -6,11 +6,13 @@ import ChatInterface from "@/components/chat/ChatInterface";
 import { createClient } from "@/utils/supabase/client";
 import { getUser } from "@/utils/supabase/queries";
 import DockWrapper from "@/components/DockWrapper";
+import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
+import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
+import Loading from '@/app/loading';
 
 export default function ChatPage() {
   const router = useRouter();
   const params = useParams();
-  // Ensure that roomId is a string by checking if params.id is an array
   const roomId = Array.isArray(params.id) ? params.id[0] : params.id;
   
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,11 @@ export default function ChatPage() {
   const [topicId, setTopicId] = useState<string | null>(null);
   const [otherUserId, setOtherUserId] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  
+  const menuLinks = [
+    { href: "/", label: "Home" },
+  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -35,7 +42,15 @@ export default function ChatPage() {
           return;
         }
 
-        // Query the chat.rooms table for the topic_id of the current room.
+        const { data: profile } = await supabase
+          .schema('profiles')
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        setUserProfile(profile);
+
         const { data: room, error: roomError } = await supabase
           .schema("chat")
           .from("rooms")
@@ -45,12 +60,11 @@ export default function ChatPage() {
 
         if (roomError || !room) {
           setError("Error loading room information.");
-          setLoading(false);
-          return;
-        }
+            setLoading(false);
+            return;
+          }
         setTopicId(room.topic_id);
 
-        // Query the chat.room_members table for the other user in the room.
         const { data: otherMember, error: otherMemberError } = await supabase
           .schema("chat")
           .from("room_members")
@@ -60,21 +74,19 @@ export default function ChatPage() {
           .single();
 
         if (otherMemberError || !otherMember) {
-          // Instead of showing an error, call the /api/chat/leave-room endpoint.
           const leaveResponse = await fetch(`/api/chat/${roomId}/leave-room`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ leaveRoom: true, roomId: roomId }),
           });
-          console.log(leaveResponse);
           if (!leaveResponse.ok) {
             setError("Error leaving room.");
-            setLoading(false);
+        setLoading(false);
             return;
-          }
+      }
           router.push('/chat');
           return;
-        }
+    }
 
         setOtherUserId(otherMember.user_id);
         setUser(user);
@@ -88,11 +100,17 @@ export default function ChatPage() {
     fetchData();
   }, [roomId, router]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="relative h-screen">
+      <MorphingMenu links={menuLinks} />
+      
+      <div className="absolute top-4 right-4 z-50">
+        <UserProfilePopover userProfile={userProfile} user={user} />
+      </div>
+
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
         <div
           className="relative bottom-4"

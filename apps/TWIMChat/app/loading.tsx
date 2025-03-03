@@ -17,11 +17,6 @@ export default function Loading() {
 
   return (
     <div className='fixed mx-auto justiify-center items-center flex h-screen w-screen'>
-      {/* <img
-        src="/images/twim-logo.png"
-        alt="logo"
-        className="mx-auto h-screen w-auto"
-      /> */}
 
       {theme === "dark" ? (
         <TwimLogoBlack className="svg-logo h-screen py-20 opacity-50 light:color-black" />
