@@ -8,9 +8,9 @@ import MagicCard from "@/components/ui/MagicCard";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from "@/utils/supabase/client";
 import { getUser } from "@/utils/supabase/queries";
-import { user } from "@nextui-org/theme";
 
 type TypingStatus = {
+  room_id: string
   user_id: string
   is_typing: boolean
 }
@@ -130,6 +130,7 @@ export default function ChatInterface({
 
   // Listen for typing status updates for the specific room and user
   useEffect(() => {
+    console.log('Listening for typing status updates...');
     const channel = supabase
       .channel('typing-status')
       .on(
@@ -138,18 +139,17 @@ export default function ChatInterface({
           event: 'UPDATE',
           schema: 'chat',
           table: 'room_members',
-          filter: `room_id=eq.${roomId}&user_id=eq.${otherUserId}`,
+          filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
           const updatedUser = payload.new as TypingStatus;
-  
-          console.log('typing status updated', updatedUser)
-          setTypingUsers((prev) => {
-            const filteredUsers = prev.filter((u) => u.user_id !== updatedUser.user_id);
-            const newTypingUsers = updatedUser.is_typing ? [...filteredUsers, updatedUser] : filteredUsers;
-            console.log('New typing users inside updater:', newTypingUsers);
-            return newTypingUsers;
-          });
+          // Manually filter updates
+          if (updatedUser.room_id === roomId && updatedUser.user_id === otherUserId) {
+            setTypingUsers((prev) => {
+              const filteredUsers = prev.filter((u) => u.user_id !== updatedUser.user_id);
+              return updatedUser.is_typing ? [...filteredUsers, updatedUser] : filteredUsers;
+            });
+          }
         }
       )
       .subscribe();
@@ -157,7 +157,7 @@ export default function ChatInterface({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, otherUserId]);
+  }, [roomId, supabase, otherUserId]);
 
   // Listen for new messages in real time
   useEffect(() => {
