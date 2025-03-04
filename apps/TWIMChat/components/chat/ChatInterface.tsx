@@ -7,6 +7,8 @@ import { MessageInput } from "@/components/ui/Chat/AiChat/message-input";
 import MagicCard from "@/components/ui/MagicCard";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from "@/utils/supabase/client";
+import { getUser } from "@/utils/supabase/queries";
+import { user } from "@nextui-org/theme";
 
 type TypingStatus = {
   user_id: string
@@ -38,6 +40,8 @@ export default function ChatInterface({
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [typingUsers, setTypingUsers] = useState<TypingStatus[]>([]);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [otherUser, setOtherUser] = useState<any>(null);
   
   const {
     input,
@@ -51,6 +55,41 @@ export default function ChatInterface({
     const messages = await res.json();
     setChatMessages(messages);
   };
+  
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const supabase = createClient();
+      const user = await getUser(supabase);
+
+      const { data: dataUser, error: errorUser } = await supabase
+        .schema('profiles')
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (errorUser) {
+        console.error('Error fetching user profile:', errorUser);
+        return;
+      }
+      setCurrentUser(dataUser);
+
+      const { data: dataOtherUser, error } = await supabase
+        .schema('profiles')
+        .from('profiles')
+        .select('*')
+        .eq('id', otherUserId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching other user profile:', error);
+        return;
+      }
+      setOtherUser(dataOtherUser);
+    };
+
+    fetchProfiles();
+  }, [userId, otherUserId]);
 
   useEffect(() => {
     fetchMessages();
@@ -179,7 +218,10 @@ export default function ChatInterface({
     >
       <ChatContainer className="relative flex flex-col w-full h-full">
         <ChatMessages messages={chatMessages}>
-          <MessageList messages={chatMessages} isTyping={typingUsers.length > 0} />
+          <MessageList messages={chatMessages} isTyping={typingUsers.length > 0} 
+            currentUser={currentUser} 
+            otherUser={otherUser}
+          />
         </ChatMessages>
 
         <ChatForm
