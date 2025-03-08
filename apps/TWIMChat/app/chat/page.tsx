@@ -11,6 +11,7 @@ import { User } from "@supabase/supabase-js";
 import Loading from "@/app/loading";
 import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
+import { AnimatedModal } from "@/components/Modal/AnimatedModal";
 
 export default function ChatPage() {
   const [matchmakingStarted, setMatchmakingStarted] = useState(false);
@@ -94,12 +95,12 @@ export default function ChatPage() {
   return (
     <div className="relative h-screen">
       <MorphingMenu links={menuLinks} />
-            
       <div className="absolute top-4 right-4 z-50">
         <UserProfilePopover userProfile={userProfile} user={user} />
       </div>
 
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
+        <AnimatedModal />
         <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
           <MagicCard title="Choisit ton sujet" className="relative py-6 flex flex-col items-center mx-auto">
             {matchmakingStarted ? (
