@@ -10,9 +10,12 @@ import { RippleLogo } from "@/components/chat/ripple-logo";
 import { User } from "@supabase/supabase-js";
 import Loading from "@/app/loading";
 import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
+import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
+
 export default function ChatPage() {
   const [matchmakingStarted, setMatchmakingStarted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   const menuLinks = [
     { href: "/", label: "Home" },
@@ -41,8 +44,18 @@ export default function ChatPage() {
         setUser(fetchedUser);
         await checkActiveRoom(fetchedUser);
       }
+      // Fetch user profile
+      const { data: profile } = await supabase
+        .schema('profiles')
+        .from('profiles')
+        .select('*')
+        .eq('id', fetchedUser.id)
+        .single();
+
+      setUserProfile(profile);
     }
     fetchUser();
+    
   }, []);
 
   // Setup realtime subscription when matchmaking has started.
@@ -81,6 +94,11 @@ export default function ChatPage() {
   return (
     <div className="relative h-screen">
       <MorphingMenu links={menuLinks} />
+            
+      <div className="absolute top-4 right-4 z-50">
+        <UserProfilePopover userProfile={userProfile} user={user} />
+      </div>
+
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
         <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
           <MagicCard title="Choisit ton sujet" className="relative py-6 flex flex-col items-center mx-auto">

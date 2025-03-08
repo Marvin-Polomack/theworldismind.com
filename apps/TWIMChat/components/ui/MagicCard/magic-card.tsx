@@ -6,8 +6,7 @@ import React, { ReactNode, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/utils/cn";
 
 interface MagicCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  description?: string;
+  title?: string;
   footer?: ReactNode;
   gradientSize?: number;
   gradientColor?: string;
@@ -18,7 +17,6 @@ interface MagicCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function MagicCard({
   title, 
-  description, 
   footer,
   children,
   className,
@@ -85,9 +83,10 @@ export default function MagicCard({
       className={cn("group relative flex size-full rounded-xl", className)}
     >
       <div className="absolute inset-px z-10 rounded-xl bg-background" />
-      <h3 className="mb-1 z-20 text-2xl font-medium">{title}</h3>
+      {title && (
+        <h3 className="mb-1 z-20 text-2xl font-medium">{title}</h3>
+      )}
       <div className="relative z-20 h-full w-full p-5">
-        <p className="">{description}</p>
           {children}
       </div>
       {footer && (

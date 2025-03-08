@@ -5,6 +5,7 @@ import { signInWithOAuth } from '@/utils/auth-helpers/client';
 import { type Provider } from '@supabase/supabase-js';
 import { ImGithub } from "react-icons/im";
 import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
 import { useState, JSX } from 'react';
 import { Loader2 } from "lucide-react";
 
@@ -20,6 +21,11 @@ export default function OauthSignIn() {
       name: 'google',
       displayName: 'Google',
       icon: <FcGoogle className="h-5 w-5" />
+    },
+    {
+      name: 'facebook',
+      displayName: 'Facebook',
+      icon: <FaFacebook className="h-5 w-5" />
     }
     /* Add desired OAuth providers here */
   ];

@@ -8,6 +8,8 @@ import MagicCard from "@/components/ui/MagicCard";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from "@/utils/supabase/client";
 import { getUser } from "@/utils/supabase/queries";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/misc/avatar";
+import { set } from "react-hook-form";
 
 type TypingStatus = {
   room_id: string
@@ -42,6 +44,7 @@ export default function ChatInterface({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [otherUser, setOtherUser] = useState<any>(null);
+  const [topic, setTopic] = useState<any>(null);
   
   const {
     input,
@@ -86,6 +89,19 @@ export default function ChatInterface({
         return;
       }
       setOtherUser(dataOtherUser);
+      
+      const { data: topic, error: topic_error } = await supabase
+        .schema('chat')
+        .from('topics')
+        .select('*')
+        .eq('id', topic_id)
+        .single();
+
+      if (topic_error) {
+        console.error('Error fetching Topics:', topic_error);
+        return;
+      }
+      setTopic(topic);
     };
 
     fetchProfiles();
@@ -213,12 +229,28 @@ export default function ChatInterface({
 
   return (
     <MagicCard
-      title={`TWIM Chat`}
-      className="relative py-6 flex flex-col items-center mx-auto overflow-hidden"
+      className="relative py-2 flex flex-col items-center mx-auto overflow-hidden"
     >
+      <h3 className="absolute top-1 left-0 right-0 mx-auto z-20 text-center text-2xl font-medium">
+        {topic?.title}
+      </h3>
+      <div className="absolute top-3 left-6 z-50">
+        <Avatar className="h-10 w-10">
+          <AvatarImage 
+            src={otherUser?.profile_image} 
+            alt={otherUser?.username || 'User'} 
+          />
+          <AvatarFallback>
+            {(otherUser?.username?.[0] || 'U').toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
       <ChatContainer className="relative flex flex-col w-full h-full">
         <ChatMessages messages={chatMessages}>
-          <MessageList messages={chatMessages} isTyping={typingUsers.length > 0} 
+          <MessageList 
+            messages={chatMessages} 
+            isTyping={typingUsers.length > 0} 
             currentUser={currentUser} 
             otherUser={otherUser}
           />
