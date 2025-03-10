@@ -101,7 +101,7 @@ export default function ChatPage() {
 
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
         <AnimatedModal />
-        <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
+        <div className="relative bottom-0 w-full md:w-[70%] h-[80%]">
           <MagicCard title="Choisit ton sujet" className="relative py-6 flex flex-col items-center mx-auto">
             {matchmakingStarted ? (
               <RippleLogo />

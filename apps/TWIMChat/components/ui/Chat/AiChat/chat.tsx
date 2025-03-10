@@ -163,10 +163,10 @@ export function ChatMessages({
 
       <div className="flex flex-1 items-end justify-end [grid-column:1/1] [grid-row:1/1]">
         {!shouldAutoScroll && (
-          <div className="sticky bottom-0 left-0 flex w-full justify-end">
+          <div className="sticky bottom-0 left-0 flex w-full justify-center">
             <Button
               onClick={scrollToBottom}
-              className="h-8 w-8 rounded-full ease-in-out animate-in fade-in-0 slide-in-from-bottom-1"
+              className="h-8 w-8 rounded-full border ease-in-out animate-in fade-in-0 slide-in-from-bottom-1"
               size="icon"
               variant="ghost"
             >

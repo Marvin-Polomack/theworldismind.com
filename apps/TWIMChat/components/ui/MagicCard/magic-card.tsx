@@ -86,7 +86,7 @@ export default function MagicCard({
       {title && (
         <h3 className="mb-1 z-20 text-2xl font-medium">{title}</h3>
       )}
-      <div className="relative z-20 h-full w-full p-5">
+      <div className="relative z-20 h-full w-full p-2">
           {children}
       </div>
       {footer && (

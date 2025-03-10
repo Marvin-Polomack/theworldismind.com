@@ -112,10 +112,7 @@ export default function ChatPage() {
       </div>
 
       <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
-        <div
-          className="relative bottom-4"
-          style={{ width: "90%", height: "85%" }}
-        >
+        <div className="relative bottom-0 md:bottom-4 w-full md:w-[90%] md:h-[85%] h-[80%]">
           <ChatInterface
             topic_id={topicId!}
             otherUserId={otherUserId!}

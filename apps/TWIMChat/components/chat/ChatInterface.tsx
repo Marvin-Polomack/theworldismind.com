@@ -229,24 +229,29 @@ export default function ChatInterface({
 
   return (
     <MagicCard
-      className="relative py-2 flex flex-col items-center mx-auto overflow-hidden"
+      className="relative h-full py-2 flex flex-col items-center mx-auto"
     >
-      <h3 className="absolute top-1 left-0 right-0 mx-auto z-20 text-center text-2xl font-medium">
-        {topic?.title}
-      </h3>
-      <div className="absolute top-3 left-6 z-50">
-        <Avatar className="h-10 w-10">
-          <AvatarImage 
-            src={otherUser?.profile_image} 
-            alt={otherUser?.username || 'User'} 
-          />
-          <AvatarFallback>
-            {(otherUser?.username?.[0] || 'U').toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+      <div className="w-full flex items-center ">
+        <div className="w-1/3 flex justify-start pl-4">
+          <Avatar className="h-10 w-10">
+            <AvatarImage 
+              src={otherUser?.profile_image} 
+              alt={otherUser?.username || 'User'} 
+            />
+            <AvatarFallback>
+              {(otherUser?.username?.[0] || 'U').toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div className="w-1/3 flex justify-center">
+          <h3 className="text-center text-l sm:text-2xl font-medium">
+            {topic?.title}
+          </h3>
+        </div>
+        <div className="w-1/3"></div>
       </div>
 
-      <ChatContainer className="relative flex flex-col w-full h-full">
+      <ChatContainer className="relative flex flex-col w-full">
         <ChatMessages messages={chatMessages}>
           <MessageList 
             messages={chatMessages} 
@@ -257,7 +262,7 @@ export default function ChatInterface({
         </ChatMessages>
 
         <ChatForm
-          className="mt-auto"
+          className="relative bottom-0 left-0 right-0 pb-16 sm:pb-8"
           isPending={false}
           handleSubmit={customHandleSubmit}
         >
