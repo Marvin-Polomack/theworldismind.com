@@ -250,7 +250,7 @@ export default function ChatInterface({
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-hidden relative lg:min-h-[calc(100vh-310px)] sm:min-h-[calc(100vh-320px)] md:min-h-[calc(100vh-300px)] min-h-[calc(100vh-330px)]">
+        <div className="flex-1 overflow-hidden relative lg:min-h-[calc(100vh-310px)] sm:min-h-[calc(100vh-320px)] md:min-h-[calc(100vh-300px)] min-h-[calc(100vh-390px)]">
           <ChatMessages messages={chatMessages}>
             <MessageList 
               messages={chatMessages} 

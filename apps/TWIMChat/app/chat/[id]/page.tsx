@@ -116,7 +116,7 @@ export default function ChatPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center relative h-[calc(100vh-160px)] max-h-[calc(100vh-160px)]">
+      <main className="flex-1 flex flex-col items-center justify-center relative h-[calc(100vh-220px)] max-h-[calc(100vh-220px)] sm:h-[calc(100vh-160px)] sm:max-h-[calc(100vh-160px)]">
         <div className="w-full md:w-[90%] h-full max-h-full overflow-hidden flex flex-col">
           <ChatInterface
             topic_id={topicId!}
