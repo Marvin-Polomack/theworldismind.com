@@ -250,6 +250,19 @@ export default function ChatInterface({
     event?.preventDefault?.();
     if (input.trim() === "") return;
     
+    // Clear any existing typing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    // Update typing status to false immediately when sending a message
+    await supabase
+      .schema('chat')
+      .from('room_members')
+      .update({ is_typing: false })
+      .eq('user_id', userId)
+      .eq('room_id', roomId);
+    
     const { error } = await supabase
       .schema('chat')
       .from('messages')
