@@ -152,7 +152,7 @@ export function ChatMessages({
 
   return (
     <div
-      className="grid grid-cols-1 overflow-y-auto pb-4"
+      className="grid grid-cols-1 overflow-y-auto pb-4 flex-1 h-full max-h-[calc(100vh-300px)]"
       ref={containerRef}
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}
@@ -163,14 +163,13 @@ export function ChatMessages({
 
       <div className="flex flex-1 items-end justify-end [grid-column:1/1] [grid-row:1/1]">
         {!shouldAutoScroll && (
-          <div className="sticky bottom-0 left-0 flex w-full justify-center">
+          <div className="sticky bottom-6 left-0 flex w-full justify-center pointer-events-none">
             <Button
               onClick={scrollToBottom}
-              className="h-8 w-8 rounded-full border ease-in-out animate-in fade-in-0 slide-in-from-bottom-1"
+              className="h-10 w-10 rounded-full border shadow-md bg-background ease-in-out animate-in fade-in-0 slide-in-from-bottom-1 z-10 pointer-events-auto"
               size="icon"
-              variant="ghost"
             >
-              <ArrowDown className="h-4 w-4" />
+              <ArrowDown className="h-5 w-5" />
             </Button>
           </div>
         )}
@@ -186,7 +185,7 @@ export const ChatContainer = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("grid max-h-full w-full grid-rows-[1fr_auto]", className)}
+      className={cn("flex flex-col w-full h-full", className)}
       {...props}
     />
   )

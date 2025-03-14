@@ -104,15 +104,20 @@ export default function ChatPage() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="relative h-screen">
-      <MorphingMenu links={menuLinks} />
-      
-      <div className="absolute top-4 right-4 z-50">
-        <UserProfilePopover userProfile={userProfile} user={user} />
-      </div>
+    <div className="flex flex-col h-screen overflow-hidden">
+      {/* Header */}
+      <header className="flex justify-between items-center z-50 px-4 py-2">
+        <div className="flex items-center">
+          <MorphingMenu links={menuLinks} className="relative static" />
+        </div>
+        <div className="flex items-center">
+          <UserProfilePopover userProfile={userProfile} user={user} />
+        </div>
+      </header>
 
-      <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
-        <div className="relative bottom-0 md:bottom-4 w-full md:w-[90%] md:h-[85%] h-[80%]">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-center relative h-[calc(100vh-160px)] max-h-[calc(100vh-160px)]">
+        <div className="w-full md:w-[90%] h-full max-h-full overflow-hidden flex flex-col">
           <ChatInterface
             topic_id={topicId!}
             otherUserId={otherUserId!}
@@ -120,10 +125,12 @@ export default function ChatPage() {
             userId={user.id}
           />
         </div>
-        <div className="absolute flex items-center w-full bottom-3">
-          <DockWrapper roomId={roomId!} />
-        </div>
-      </div>
+      </main>
+
+      {/* Footer - Always visible at bottom */}
+      <footer className="py-3 px-4 flex justify-center items-center z-50 shrink-0">
+        <DockWrapper roomId={roomId!} />
+      </footer>
     </div>
   );
 }

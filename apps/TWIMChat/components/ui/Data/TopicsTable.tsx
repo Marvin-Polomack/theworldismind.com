@@ -65,7 +65,23 @@ export default function TopicsTable({ onStartMatchmaking }: TopicsTableProps) {
   // Scroll selected topic into view when navigating
   useEffect(() => {
     if (selectedIndex !== -1 && itemRefs.current[selectedIndex]) {
-      itemRefs.current[selectedIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      // Use a more controlled approach to scrolling
+      const container = wrapperRef.current?.querySelector('.overflow-y-auto');
+      const item = itemRefs.current[selectedIndex];
+      
+      if (container && item) {
+        const containerRect = container.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        
+        // Only scroll if the item is not fully visible
+        if (itemRect.bottom > containerRect.bottom || itemRect.top < containerRect.top) {
+          item.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "nearest"
+          });
+        }
+      }
     }
   }, [selectedIndex]);
 
@@ -122,9 +138,9 @@ export default function TopicsTable({ onStartMatchmaking }: TopicsTableProps) {
   };
 
   return (
-    <div className="flex flex-col relative mx-auto my-6 w-full max-w-6xl rounded p-4 h-full" ref={wrapperRef} onKeyDown={handleKeyDown}>
+    <div className="flex flex-col relative w-full max-w-full rounded h-full px-4" ref={wrapperRef} onKeyDown={handleKeyDown}>
       {/* Search input remains fixed */}
-      <div className="relative flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+      <div className="sticky top-0 z-10 bg-background relative flex flex-wrap items-center justify-between gap-4 border-b pb-4 mb-4">
         <div className="relative w-full">
           <Input
             placeholder="Cherche un sujet..."
@@ -137,32 +153,40 @@ export default function TopicsTable({ onStartMatchmaking }: TopicsTableProps) {
           <BorderBeam size={75} delay={7.5} />
         </div>
       </div>
-      {/* Scrollable topics list */}
-      <div className="flex-1 overflow-y-auto">
-        <motion.ul
-          className="flex flex-col gap-4 justify-center items-center"
-          layout
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        >
-          {topics.map((topic, index) => {
-            const card = topicToCard(topic);
-            return (
-              <div key={card.id} ref={el => { itemRefs.current[index] = el; }}
-              className="w-full">
-                <Card
-                  card={card}
-                  selected={index === selectedIndex}
-                  onClick={() => {
-                    setSelectedIndex(index);
-                    setSelectedCard(card);
-                  }}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                  onKeyDown={() => handleKeyDown}
-                />
-              </div>
-            );
-          })}
-        </motion.ul>
+      {/* Scrollable topics list with fixed height */}
+      <div className="flex-1 overflow-hidden" style={{ maxHeight: 'calc(100% - 130px)' }}>
+        <div className="h-full overflow-y-auto overflow-x-hidden">
+          <motion.ul
+            className="flex flex-col gap-4 justify-center items-center pb-6 pt-2 w-full"
+            layout
+            transition={{ 
+              duration: 0.2, 
+              ease: "easeOut"
+            }}
+          >
+            {topics.map((topic, index) => {
+              const card = topicToCard(topic);
+              return (
+                <div 
+                  key={card.id} 
+                  ref={el => { itemRefs.current[index] = el; }}
+                  className="w-full"
+                >
+                  <Card
+                    card={card}
+                    selected={index === selectedIndex}
+                    onClick={() => {
+                      setSelectedIndex(index);
+                      setSelectedCard(card);
+                    }}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    onKeyDown={() => handleKeyDown}
+                  />
+                </div>
+              );
+            })}
+          </motion.ul>
+        </div>
       </div>
       <Modal card={selectedCard} onClick={() => setSelectedCard(null)} onChat={handleChatClick} />
     </div>

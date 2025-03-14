@@ -34,7 +34,7 @@ export function MorphingMenu({ className, links }: MorphingMenuProps) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "fixed top-4 left-4 z-50 p-3 hover:opacity-75 transition-opacity text-primary",
+          "p-3 hover:opacity-75 transition-opacity text-primary",
           className
         )}
         aria-label="Toggle menu"

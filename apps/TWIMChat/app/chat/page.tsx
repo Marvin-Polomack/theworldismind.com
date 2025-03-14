@@ -93,27 +93,37 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="relative h-screen">
-      <MorphingMenu links={menuLinks} />
-      <div className="absolute top-4 right-4 z-50">
-        <UserProfilePopover userProfile={userProfile} user={user} />
-      </div>
+    <div className="flex flex-col h-screen overflow-hidden">
+      {/* Header */}
+      <header className="flex justify-between items-center z-50 px-4 py-2">
+        <div className="flex items-center">
+          <MorphingMenu links={menuLinks} className="relative static" />
+        </div>
+        <div className="flex items-center">
+          <UserProfilePopover userProfile={userProfile} user={user} />
+        </div>
+      </header>
 
-      <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-center relative">
         <AnimatedModal />
-        <div className="relative bottom-0 w-full md:w-[70%] h-[80%]">
-          <MagicCard title="Choisit ton sujet" className="relative py-6 flex flex-col items-center mx-auto">
+        <div className="w-full md:w-[70%] h-[80%] max-h-[calc(100vh-160px)] flex flex-col">
+          <MagicCard title="Choisit ton sujet" className="relative flex-1 overflow-hidden flex flex-col items-center mx-auto p-4">
             {matchmakingStarted ? (
               <RippleLogo />
             ) : (
-              <TopicsTable onStartMatchmaking={() => setMatchmakingStarted(true)} />
+              <div className="w-full h-full overflow-hidden flex flex-col">
+                <TopicsTable onStartMatchmaking={() => setMatchmakingStarted(true)} />
+              </div>
             )}
           </MagicCard>
         </div>
-        <div className="absolute flex items-center w-full bottom-3">
-          <DockWrapper />
-        </div>
-      </div>
+      </main>
+
+      {/* Footer - Always visible at bottom */}
+      <footer className="py-3 px-4 flex justify-center items-center z-50 shrink-0">
+        <DockWrapper />
+      </footer>
     </div>
   );
 }

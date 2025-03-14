@@ -49,7 +49,7 @@ export default function ChatInterface({
   const {
     input,
     handleInputChange,
-    // we won’t use the original handleSubmit
+    // we won't use the original handleSubmit
   } = useChat()
 
   // Fetch initial messages
@@ -228,10 +228,8 @@ export default function ChatInterface({
   }
 
   return (
-    <MagicCard
-      className="relative h-full py-2 flex flex-col items-center mx-auto"
-    >
-      <div className="w-full flex items-center ">
+    <MagicCard className="h-full flex flex-col overflow-hidden">
+      <div className="flex justify-between items-center mb-4 flex-shrink-0">
         <div className="w-1/3 flex justify-start pl-4">
           <Avatar className="h-10 w-10">
             <AvatarImage 
@@ -251,33 +249,37 @@ export default function ChatInterface({
         <div className="w-1/3"></div>
       </div>
 
-      <ChatContainer className="relative flex flex-col w-full">
-        <ChatMessages messages={chatMessages}>
-          <MessageList 
-            messages={chatMessages} 
-            isTyping={typingUsers.length > 0} 
-            currentUser={currentUser} 
-            otherUser={otherUser}
-          />
-        </ChatMessages>
-
-        <ChatForm
-          className="relative bottom-0 left-0 right-0 pb-16 sm:pb-8"
-          isPending={false}
-          handleSubmit={customHandleSubmit}
-        >
-          {({ files, setFiles }) => (
-            <MessageInput
-              value={input}
-              onChange={(e) => {
-                handleInputChange(e);
-                handleTyping();
-              }}
-              isGenerating={false}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 overflow-hidden relative lg:min-h-[calc(100vh-310px)] sm:min-h-[calc(100vh-320px)] md:min-h-[calc(100vh-300px)] min-h-[calc(100vh-330px)]">
+          <ChatMessages messages={chatMessages}>
+            <MessageList 
+              messages={chatMessages} 
+              isTyping={typingUsers.length > 0} 
+              currentUser={currentUser} 
+              otherUser={otherUser}
             />
-          )}
-        </ChatForm>
-      </ChatContainer>
+          </ChatMessages>
+        </div>
+
+        <div className="flex-shrink-0 mt-auto">
+          <ChatForm
+            className="pb-4 sm:pb-2"
+            isPending={false}
+            handleSubmit={customHandleSubmit}
+          >
+            {({ files, setFiles }) => (
+              <MessageInput
+                value={input}
+                onChange={(e) => {
+                  handleInputChange(e);
+                  handleTyping();
+                }}
+                isGenerating={false}
+              />
+            )}
+          </ChatForm>
+        </div>
+      </div>
     </MagicCard>
   );
 }

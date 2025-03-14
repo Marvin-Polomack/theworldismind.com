@@ -84,7 +84,7 @@ export default function MagicCard({
     >
       <div className="absolute inset-px z-10 rounded-xl bg-background" />
       {title && (
-        <h3 className="mb-1 z-20 text-2xl font-medium">{title}</h3>
+        <h3 className="mb-4 mt-2 mx-4 z-20 text-2xl font-medium">{title}</h3>
       )}
       <div className="relative z-20 h-full w-full p-2">
           {children}
