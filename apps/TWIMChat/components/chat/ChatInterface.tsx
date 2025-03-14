@@ -10,6 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import { getUser } from "@/utils/supabase/queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/misc/avatar";
 import { set } from "react-hook-form";
+import { use100vh } from 'react-div-100vh';
 
 type TypingStatus = {
   room_id: string
@@ -45,6 +46,7 @@ export default function ChatInterface({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [otherUser, setOtherUser] = useState<any>(null);
   const [topic, setTopic] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState<'small' | 'medium-small' | 'regular' | false>(false);
   
   const {
     input,
@@ -52,6 +54,44 @@ export default function ChatInterface({
     // we won't use the original handleSubmit
   } = useChat()
 
+  // Get the real viewport height using the hook
+  const viewportHeight = use100vh();
+  
+  // Check if the device is a mobile device based on screen width
+  useEffect(() => {
+    const checkIfMobile = () => {
+      const width = window.innerWidth;
+      if (width < 376) { // iPhone SE and similar small devices
+        setIsMobile('small');
+      } 
+      else if (width >= 376 && width < 391) { // Medium-small mobile devices
+        setIsMobile('medium-small');
+      }
+      else if (width < 768) { // Regular mobile devices
+        setIsMobile('regular');
+      }
+      else {
+        setIsMobile(false);
+      }
+    };
+    
+    // Check on initial load
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+  
+  // Calculate viewport height percentage based on device type
+  const heightPercentage = isMobile === 'small' ? 0.51 : // 45% for very small mobiles
+                          isMobile === 'medium-small' ? 0.6 : // 60% for medium-small mobiles
+                          isMobile === 'regular' ? 0.65 : // 65% for regular mobiles
+                          0.7; // 70% for desktop
+  const chatContainerHeight = viewportHeight ? `${viewportHeight * heightPercentage}px` : `${heightPercentage * 100}vh`;
+  
   // Fetch initial messages
   const fetchMessages = async () => {
     const res = await fetch(`/api/chat/${roomId}/messages`);
@@ -249,8 +289,11 @@ export default function ChatInterface({
         <div className="w-1/3"></div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-hidden relative lg:min-h-[calc(100vh-310px)] sm:min-h-[calc(100vh-320px)] md:min-h-[calc(100vh-300px)] min-h-[calc(100vh-390px)]">
+      <div className="flex flex-col min-h-0">
+        <div 
+          className="overflow-hidden" 
+          style={{ minHeight: chatContainerHeight }}
+        >
           <ChatMessages messages={chatMessages}>
             <MessageList 
               messages={chatMessages} 
@@ -261,7 +304,7 @@ export default function ChatInterface({
           </ChatMessages>
         </div>
 
-        <div className="flex-shrink-0 mt-auto">
+        <div className="flex-shrink-0 ">
           <ChatForm
             className="pb-4 sm:pb-2"
             isPending={false}

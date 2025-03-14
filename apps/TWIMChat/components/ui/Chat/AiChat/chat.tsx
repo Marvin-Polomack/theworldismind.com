@@ -1,7 +1,8 @@
 "use client"
 
-import { forwardRef, useCallback, useState, type ReactElement } from "react"
+import { forwardRef, useCallback, useState, type ReactElement, useEffect } from "react"
 import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react"
+import { use100vh } from 'react-div-100vh'
 
 import { cn } from "@/utils/cn"
 import { useAutoScroll } from "@/hooks/use-auto-scroll"
@@ -149,10 +150,54 @@ export function ChatMessages({
     shouldAutoScroll,
     handleTouchStart,
   } = useAutoScroll([messages])
+  
+  // Get the real viewport height using the hook
+  const viewportHeight = use100vh();
+  
+  // State to track device size
+  const [deviceSize, setDeviceSize] = useState<'small' | 'medium-small' | 'regular' | 'desktop'>('desktop');
+  
+  // Check device size based on screen width
+  useEffect(() => {
+    const checkDeviceSize = () => {
+      const width = window.innerWidth;
+      if (width < 376) { // iPhone SE and similar small devices
+        setDeviceSize('small');
+      } 
+      else if (width >= 376 && width < 391) { // Medium-small mobile devices
+        setDeviceSize('medium-small');
+      }
+      else if (width < 768) { // Regular mobile devices
+        setDeviceSize('regular');
+      }
+      else {
+        setDeviceSize('desktop');
+      }
+    };
+    
+    // Check on initial load
+    checkDeviceSize();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkDeviceSize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkDeviceSize);
+  }, []);
+  
+  // Calculate viewport height percentage based on device type
+  const heightPercentage = deviceSize === 'small' ? 0.51 : // 51% for very small mobiles
+                          deviceSize === 'medium-small' ? 0.62 : // 60% for medium-small mobiles
+                          deviceSize === 'regular' ? 0.65 : // 65% for regular mobiles
+                          0.7; // 70% for desktop
+  
+  // Calculate the max height using the real viewport height
+  const maxHeight = viewportHeight ? `${viewportHeight * heightPercentage}px` : `${heightPercentage * 100}vh`;
 
   return (
     <div
-      className="grid grid-cols-1 overflow-y-auto pb-4 flex-1 h-full max-h-[calc(100vh-300px)]"
+      className="grid grid-cols-1 overflow-y-auto pb-4 flex-1 h-full"
+      style={{ maxHeight }}
       ref={containerRef}
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}

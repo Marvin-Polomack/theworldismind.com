@@ -9,6 +9,8 @@ import DockWrapper from "@/components/DockWrapper";
 import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
 import Loading from '@/app/loading';
+import Div100vh from 'react-div-100vh'
+import { use100vh } from 'react-div-100vh'
 
 export default function ChatPage() {
   const router = useRouter();
@@ -21,6 +23,14 @@ export default function ChatPage() {
   const [otherUserId, setOtherUserId] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+  
+  // Get the real viewport height using the hook
+  const viewportHeight = use100vh();
+  
+  // Calculate 85% of the viewport height, with a fallback to regular vh units if the hook fails
+  const mainContentHeight = viewportHeight ? `${viewportHeight * 0.85}px` : '85vh';
+  // Reserve some space for header and footer
+  const headerFooterSpace = viewportHeight ? `${viewportHeight * 0.15}px` : '15vh';
   
   const menuLinks = [
     { href: "/", label: "Home" },
@@ -104,6 +114,7 @@ export default function ChatPage() {
   if (error) return <div>{error}</div>;
 
   return (
+    <Div100vh>
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Header */}
       <header className="flex justify-between items-center z-50 px-4 py-2">
@@ -115,8 +126,11 @@ export default function ChatPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center relative h-[calc(100vh-220px)] max-h-[calc(100vh-220px)] sm:h-[calc(100vh-160px)] sm:max-h-[calc(100vh-160px)]">
+      {/* Main Content - Using dynamic height from use100vh hook */}
+      <main 
+        className="flex-1 flex flex-col items-center justify-center relative overflow-hidden"
+        style={{ height: mainContentHeight, maxHeight: mainContentHeight }}
+      >
         <div className="w-full md:w-[90%] h-full max-h-full overflow-hidden flex flex-col">
           <ChatInterface
             topic_id={topicId!}
@@ -132,5 +146,6 @@ export default function ChatPage() {
         <DockWrapper roomId={roomId!} />
       </footer>
     </div>
+    </Div100vh>
   );
 }
