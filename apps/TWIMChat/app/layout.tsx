@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Providers from "./providers";
+import { ViewportProvider } from '@/providers/ViewportProvider';
 
 export const metadata: Metadata = {
   title: 'The World Is Mind',
@@ -18,9 +19,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <ViewportProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </ViewportProvider>
       </body>
     </html>
   );

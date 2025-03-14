@@ -10,7 +10,7 @@ import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
 import Loading from '@/app/loading';
 import Div100vh from 'react-div-100vh'
-import { use100vh } from 'react-div-100vh'
+import { useRealHeight } from '@/hooks/useRealHeight';
 
 export default function ChatPage() {
   const router = useRouter();
@@ -24,13 +24,13 @@ export default function ChatPage() {
   const [user, setUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   
-  // Get the real viewport height using the hook
-  const viewportHeight = use100vh();
-  
-  // Calculate 85% of the viewport height, with a fallback to regular vh units if the hook fails
-  const mainContentHeight = viewportHeight ? `${viewportHeight * 0.85}px` : '85vh';
-  // Reserve some space for header and footer
-  const headerFooterSpace = viewportHeight ? `${viewportHeight * 0.15}px` : '15vh';
+  // Use the new hook with device-specific percentages
+  const { height: mainContentHeight } = useRealHeight({
+    smallPercentage: 75, // 75% for very small devices
+    mediumSmallPercentage: 78, // 78% for medium-small devices
+    regularPercentage: 80, // 80% for regular mobile
+    desktopPercentage: 82, // 82% for desktop
+  });
   
   const menuLinks = [
     { href: "/", label: "Home" },
@@ -114,8 +114,7 @@ export default function ChatPage() {
   if (error) return <div>{error}</div>;
 
   return (
-    <Div100vh>
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col real-screen overflow-hidden">
       {/* Header */}
       <header className="flex justify-between items-center z-50 px-4 py-2">
         <div className="flex items-center">
@@ -126,7 +125,7 @@ export default function ChatPage() {
         </div>
       </header>
 
-      {/* Main Content - Using dynamic height from use100vh hook */}
+      {/* Main Content - Using the new useRealHeight hook */}
       <main 
         className="flex-1 flex flex-col items-center justify-center relative overflow-hidden"
         style={{ height: mainContentHeight, maxHeight: mainContentHeight }}
@@ -146,6 +145,5 @@ export default function ChatPage() {
         <DockWrapper roomId={roomId!} />
       </footer>
     </div>
-    </Div100vh>
   );
 }

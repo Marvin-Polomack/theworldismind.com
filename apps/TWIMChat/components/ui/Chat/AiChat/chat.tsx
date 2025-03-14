@@ -188,8 +188,8 @@ export function ChatMessages({
   // Calculate viewport height percentage based on device type
   const heightPercentage = deviceSize === 'small' ? 0.51 : // 51% for very small mobiles
                           deviceSize === 'medium-small' ? 0.62 : // 60% for medium-small mobiles
-                          deviceSize === 'regular' ? 0.65 : // 65% for regular mobiles
-                          0.7; // 70% for desktop
+                          deviceSize === 'regular' ? 0.62 : // 65% for regular mobiles
+                          0.67; // 70% for desktop
   
   // Calculate the max height using the real viewport height
   const maxHeight = viewportHeight ? `${viewportHeight * heightPercentage}px` : `${heightPercentage * 100}vh`;

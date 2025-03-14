@@ -81,6 +81,13 @@
   }
 }
 
+@layer utilities {
+  .real-screen {
+    @apply h-screen;
+    height: var(--real-vh, 100vh);
+  }
+}
+
 @keyframes breathe {
   0% { filter: brightness(1); }
   50% { filter: brightness(0.5); }

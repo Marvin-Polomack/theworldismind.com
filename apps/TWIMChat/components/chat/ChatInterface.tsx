@@ -88,8 +88,8 @@ export default function ChatInterface({
   // Calculate viewport height percentage based on device type
   const heightPercentage = isMobile === 'small' ? 0.51 : // 45% for very small mobiles
                           isMobile === 'medium-small' ? 0.6 : // 60% for medium-small mobiles
-                          isMobile === 'regular' ? 0.65 : // 65% for regular mobiles
-                          0.7; // 70% for desktop
+                          isMobile === 'regular' ? 0.62 : // 65% for regular mobiles
+                          0.67; // 70% for desktop
   const chatContainerHeight = viewportHeight ? `${viewportHeight * heightPercentage}px` : `${heightPercentage * 100}vh`;
   
   // Fetch initial messages

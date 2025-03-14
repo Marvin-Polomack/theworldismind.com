@@ -12,11 +12,20 @@ import Loading from "@/app/loading";
 import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
 import { AnimatedModal } from "@/components/Modal/AnimatedModal";
+import { useRealHeight } from '@/hooks/useRealHeight';
 
 export default function ChatPage() {
   const [matchmakingStarted, setMatchmakingStarted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+
+  // Use the new hook with device-specific percentages
+  const { height: containerHeight } = useRealHeight({
+    smallPercentage: 75, // 75% for very small devices
+    mediumSmallPercentage: 78, // 78% for medium-small devices
+    regularPercentage: 80, // 80% for regular mobile
+    desktopPercentage: 82, // 82% for desktop
+  });
 
   const menuLinks = [
     { href: "/", label: "Home" },
@@ -93,7 +102,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex real-screen flex-col h-screen overflow-hidden">
       {/* Header */}
       <header className="flex justify-between items-center z-50 px-4 py-2">
         <div className="flex items-center">
@@ -107,7 +116,10 @@ export default function ChatPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center relative">
         <AnimatedModal />
-        <div className="w-full md:w-[70%] h-[80%] max-h-[calc(100vh-160px)] flex flex-col">
+        <div 
+          className="w-full md:w-[70%] flex flex-col"
+          style={{ height: containerHeight, maxHeight: containerHeight }}
+        >
           <MagicCard title="Choisit ton sujet" className="relative flex-1 overflow-hidden flex flex-col items-center mx-auto p-4">
             {matchmakingStarted ? (
               <RippleLogo />

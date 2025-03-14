@@ -29,7 +29,9 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <div className="relative overflow-hidden py-24 lg:py-32 min-h-screen flex items-center justify-center">
+    <div 
+      className="relative overflow-hidden py-24 real-screen lg:py-32 flex items-center justify-center"
+    >
       <div className="relative z-10 text-center">
         <div className="mx-auto">
           {/* Title */}
