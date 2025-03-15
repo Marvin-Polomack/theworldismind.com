@@ -12,6 +12,9 @@ import { MorphingMenu } from "@/components/ui/misc/morphing-menu";
 import { UserProfilePopover } from "@/components/Profile/UserProfilePopover";
 import DockWrapper from "@/components/DockWrapper";
 import Loading from '@/app/loading';
+import { use100vh } from 'react-div-100vh';
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/misc/avatar";
+import { useRealHeight } from '@/hooks/useRealHeight';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -24,6 +27,14 @@ export default function SettingsPage() {
     { href: "/", label: "Home" },
     { href: "/chat", label: "TWIM Chat" },
   ];
+
+  // Use the new hook with device-specific percentages
+  const { height: mainContentHeight } = useRealHeight({
+    smallPercentage: 75, // 75% for very small devices
+    mediumSmallPercentage: 78, // 78% for medium-small devices
+    regularPercentage: 80, // 80% for regular mobile
+    desktopPercentage: 82, // 82% for desktop
+  });
 
   useEffect(() => {
     async function fetchUserData() {
@@ -93,62 +104,82 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="relative h-screen">
-      <MorphingMenu links={menuLinks} />
-            
-      <div className="absolute top-4 right-4 z-50">
-        <UserProfilePopover userProfile={userProfile} user={user} />
+    <div className="flex flex-col real-screen overflow-hidden">
+      {/* Header */}
+      <header className="flex justify-between items-center z-50 px-4 py-2">
+        <div className="flex items-center">
+          <MorphingMenu links={menuLinks} className="relative static" />
+        </div>
+        <div className="flex items-center">
+          <UserProfilePopover userProfile={userProfile} user={user} />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main 
+        className="flex-1 flex flex-col items-center justify-center relative overflow-hidden"
+        style={{ height: mainContentHeight, maxHeight: mainContentHeight }}
+      >
+        <div className="w-full md:w-[90%] h-full max-h-full overflow-hidden flex flex-col">
+          <MagicCard className="h-full flex flex-col overflow-hidden">
+            <div className="flex justify-between items-center mb-4 flex-shrink-0 px-4 py-2">
+              <div className="w-1/3 flex justify-start">
+              </div>
+              <div className="w-1/3 flex justify-center">
+                <h3 className="text-center text-l sm:text-2xl font-medium">
+                  Paramètres
+                </h3>
+              </div>
+              <div className="w-1/3"></div>
             </div>
 
-      <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
-        <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
-          <MagicCard
-            title="Paramètres"
-            className="relative py-6 flex flex-col items-center mx-auto"
-          >
-            <div className="w-full space-y-6 p-4">
-              <div className="space-y-2">
-                <h2 className="text-lg font-semibold">Danger Zone</h2>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" className="w-full">
-                      {isDeleting ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Suppression...
-                        </>
-                      ) : (
-                        "Supprimer le compte"
-                      )}
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Cette action est irréversible. Elle supprimera définitivement votre compte
-                        et toutes les données associées de nos serveurs.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleDeleteAccount}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        Supprimer le compte
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-    </div>
+            <div className="flex-1 overflow-auto px-4">
+              <div className="w-full space-y-6">
+                <div className="space-y-2">
+                  <h2 className="text-lg font-semibold">Danger Zone</h2>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="w-full">
+                        {isDeleting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Suppression...
+                          </>
+                        ) : (
+                          "Supprimer le compte"
+                        )}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Cette action est irréversible. Elle supprimera définitivement votre compte
+                          et toutes les données associées de nos serveurs.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDeleteAccount}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Supprimer le compte
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
             </div>
           </MagicCard>
         </div>
-        <div className="absolute flex items-center w-full bottom-3">
-          <DockWrapper />
-        </div>
-      </div>
+      </main>
+
+      {/* Footer - Always visible at bottom */}
+      <footer className="py-3 px-4 flex justify-center items-center z-50 shrink-0">
+        <DockWrapper />
+      </footer>
     </div>
   );
 }

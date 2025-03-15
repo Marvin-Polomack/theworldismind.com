@@ -16,6 +16,8 @@ import { HomeIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import Compressor from 'compressorjs';
+import { useRealHeight } from '@/hooks/useRealHeight';
+import { UserProfilePopover } from '@/components/Profile/UserProfilePopover';
 
 interface Profile {
   id: string;
@@ -40,6 +42,14 @@ export default function ProfilePage() {
     username: '',
     bio: '',
     profile_image: ''
+  });
+  
+  // Use the new hook with device-specific percentages
+  const { height: mainContentHeight } = useRealHeight({
+    smallPercentage: 75, // 75% for very small devices
+    mediumSmallPercentage: 78, // 78% for medium-small devices
+    regularPercentage: 80, // 80% for regular mobile
+    desktopPercentage: 82, // 82% for desktop
   });
 
   useEffect(() => {
@@ -171,88 +181,115 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="relative h-screen">
-      <MorphingMenu links={menuLinks} />
-      <div className="relative flex flex-col items-center justify-center overflow-hidden h-screen">
-        <div className="relative bottom-0" style={{ width: "70%", height: "80%" }}>
-          <MagicCard
-            title={`Profile - ${profile.username}`}
-            className="relative py-6 flex flex-col items-center mx-auto h-full"
-          >
-            <div className="flex flex-col h-full p-6 space-y-6 w-full">
-              <div className="flex items-center space-x-4">
-                <motion.div
-                  whileHover={currentUser?.id === profile?.id ? { scale: 1.05 } : {}}
-                  className="relative group cursor-pointer"
-                  onClick={handleAvatarClick}
-                >
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={profile.profile_image} alt={profile.username} />
-                    <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
+    <div className="flex flex-col real-screen overflow-hidden">
+      {/* Header */}
+      <header className="flex justify-between items-center z-50 px-4 py-2">
+        <div className="flex items-center">
+          <MorphingMenu links={menuLinks} className="relative static" />
+        </div>
+        <div className="flex items-center">
+          {currentUser && (
+            <UserProfilePopover userProfile={currentUser} user={currentUser} />
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main 
+        className="flex-1 flex flex-col items-center justify-center relative overflow-hidden"
+        style={{ height: mainContentHeight, maxHeight: mainContentHeight }}
+      >
+        <div className="w-full md:w-[90%] h-full max-h-full overflow-hidden flex flex-col">
+          <MagicCard className="h-full flex flex-col overflow-hidden">
+            <div className="flex justify-between items-center mb-4 flex-shrink-0 px-4 py-2">
+              <div className="w-1/3 flex justify-start">
+              </div>
+              <div className="w-1/3 flex justify-center">
+                {/* <h3 className="text-center text-l sm:text-2xl font-medium">
+                  Profil de {profile.username}
+                </h3> */}
+              </div>
+              <div className="w-1/3"></div>
+            </div>
+
+            <div className="flex-1 overflow-auto px-4">
+              <div className="flex flex-col space-y-6 w-full">
+                <div className="flex items-center space-x-4">
+                  <motion.div
+                    whileHover={currentUser?.id === profile?.id ? { scale: 1.05 } : {}}
+                    className="relative group cursor-pointer"
+                    onClick={handleAvatarClick}
+                  >
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src={profile.profile_image} alt={profile.username} />
+                      <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    
+                    {currentUser?.id === profile?.id && (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full"
+                      >
+                        <Upload className="w-8 h-8 text-white" />
+                      </motion.div>
+                    )}
+                  </motion.div>
                   
-                  {currentUser?.id === profile?.id && (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full"
-                    >
-                      <Upload className="w-8 h-8 text-white" />
-                    </motion.div>
-                  )}
-                </motion.div>
-                
-                <div>
-                  <h1 className="text-2xl font-bold">{profile.username}</h1>
-                  {currentUser?.id === profile.id && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsEditing(!isEditing)}
-                      className="mt-2"
-                    >
-                      {isEditing ? 'Annuler' : 'Modifier Profil'}
-                    </Button>
+                  <div>
+                    <h1 className="text-2xl font-bold">{profile.username}</h1>
+                    {currentUser?.id === profile.id && (
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEditing(!isEditing)}
+                        className="mt-2"
+                      >
+                        {isEditing ? 'Annuler' : 'Modifier Profil'}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  {isEditing ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Pseudo</label>
+                        <Input
+                          value={editForm.username}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, username: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Bio</label>
+                        <Textarea
+                          value={editForm.bio}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, bio: e.target.value })
+                          }
+                          rows={4}
+                        />
+                      </div>
+                      <Button onClick={handleSave}>Enregister les changements</Button>
+                    </div>
+                  ) : (
+                    <div className="prose dark:prose-invert max-w-none">
+                      <p className="text-lg">{profile.bio}</p>
+                    </div>
                   )}
                 </div>
-              </div>
-              <div className="flex-1 overflow-y-scroll">
-                {isEditing ? (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Pseudo</label>
-                      <Input
-                        value={editForm.username}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, username: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Bio</label>
-                      <Textarea
-                        value={editForm.bio}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, bio: e.target.value })
-                        }
-                        rows={4}
-                      />
-                    </div>
-                    <Button onClick={handleSave}>Enregister les changements</Button>
-                  </div>
-                ) : (
-                  <div className="prose dark:prose-invert max-w-none">
-                    <p className="text-lg">{profile.bio}</p>
-                  </div>
-                )}
               </div>
             </div>
           </MagicCard>
         </div>
-        <div className="absolute flex items-center w-full bottom-3">
-          <DockWrapper />
-        </div>
-      </div>
+      </main>
+
+      {/* Footer - Always visible at bottom */}
+      <footer className="py-3 px-4 flex justify-center items-center z-50 shrink-0">
+        <DockWrapper />
+      </footer>
     </div>
   );
 }
