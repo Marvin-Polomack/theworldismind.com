@@ -1,0 +1,9 @@
+{
+  "name": "twimchat",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./"
+} 
