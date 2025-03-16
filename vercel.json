@@ -4,5 +4,9 @@
   "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
   "installCommand": "npm install",
   "framework": null,
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/api/factcheck/(.*)", "destination": "/apps/TWIMChat-FactCheck/dist/index.js" },
+    { "source": "/(.*)", "destination": "/apps/TWIMChat" }
+  ]
 } 
