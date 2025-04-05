@@ -96,7 +96,7 @@ export function Chat({
   )
 
   return (
-    <ChatContainer className={className}>
+    <ChatContainer className={cn(className, "flex flex-col h-full")}>
       {isEmpty && append && suggestions ? (
         <PromptSuggestions
           label="Try these prompts ✨"
@@ -196,29 +196,31 @@ export function ChatMessages({
 
   return (
     <div
-      className="grid grid-cols-1 overflow-y-auto pb-4 flex-1 h-full"
-      style={{ maxHeight }}
+      className="relative flex flex-col overflow-y-auto h-full"
+      style={{ 
+        minHeight: maxHeight,
+        maxHeight: maxHeight,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end'
+      }}
       ref={containerRef}
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}
     >
-      <div className="max-w-full [grid-column:1/1] [grid-row:1/1]">
-        {children}
-      </div>
-
-      <div className="flex flex-1 items-end justify-end [grid-column:1/1] [grid-row:1/1]">
-        {!shouldAutoScroll && (
-          <div className="sticky bottom-6 left-0 flex w-full justify-center pointer-events-none">
-            <Button
-              onClick={scrollToBottom}
-              className="h-10 w-10 rounded-full border shadow-md bg-background ease-in-out animate-in fade-in-0 slide-in-from-bottom-1 z-10 pointer-events-auto"
-              size="icon"
-            >
-              <ArrowDown className="h-5 w-5" />
-            </Button>
-          </div>
-        )}
-      </div>
+      {children}
+      
+      {!shouldAutoScroll && (
+        <div className="sticky bottom-6 left-0 flex w-full justify-center pointer-events-none">
+          <Button
+            onClick={scrollToBottom}
+            className="h-10 w-10 rounded-full border shadow-md bg-background ease-in-out animate-in fade-in-0 slide-in-from-bottom-1 z-10 pointer-events-auto"
+            size="icon"
+          >
+            <ArrowDown className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
@@ -230,7 +232,7 @@ export const ChatContainer = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex flex-col w-full h-full", className)}
+      className={cn("flex flex-col w-full h-full justify-end", className)}
       {...props}
     />
   )

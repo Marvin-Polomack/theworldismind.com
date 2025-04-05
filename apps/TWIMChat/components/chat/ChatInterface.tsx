@@ -317,7 +317,7 @@ export default function ChatInterface({
           </ChatMessages>
         </div>
 
-        <div className="flex-shrink-0 ">
+        <div className="flex-shrink-0">
           <ChatForm
             className="pb-4 sm:pb-2"
             isPending={false}

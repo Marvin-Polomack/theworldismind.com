@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/misc/po
 import { Button } from "@/components/ui/misc/button"
 import { User, Mail, MapPin, MessageSquare } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useEffect, useRef } from "react"
 
 interface MessageListProps {
   messages: Message[]
@@ -22,6 +23,12 @@ export function MessageList({
   otherUser 
 }: MessageListProps) {
   const router = useRouter()
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Scroll to bottom whenever messages change or component mounts
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, isTyping])
 
   const UserAvatar = ({ user, isSender }: { user: any; isSender: boolean }) => (
     <Popover>
@@ -100,7 +107,7 @@ export function MessageList({
   )
 
   return (
-    <div className="space-y-6 px-4">
+    <div className="w-full px-4 space-y-6 min-h-0">
       {messages.map((message) => {
         const isSender = message.role === "sender"
         const user = isSender ? currentUser : otherUser
@@ -145,6 +152,7 @@ export function MessageList({
           <TypingIndicator />
         </div>
       )}
+      <div ref={messagesEndRef} />
     </div>
   )
 }
