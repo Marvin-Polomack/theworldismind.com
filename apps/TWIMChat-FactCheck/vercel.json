@@ -7,11 +7,6 @@
     { "source": "/", "destination": "/api/status" },
     { "source": "/api/:path*", "destination": "/api/:path*" }
   ],
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs@18.x"
-    }
-  },
   "env": {
     "NODE_ENV": "production"
   }
