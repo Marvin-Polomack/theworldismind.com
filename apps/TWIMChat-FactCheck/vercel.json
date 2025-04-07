@@ -2,6 +2,10 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/", "destination": "/api/status" },
+    { "source": "/api/:path*", "destination": "/api/:path*" }
+  ],
   "env": {
     "NODE_ENV": "production"
   }
