@@ -2,8 +2,10 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/", "destination": "/api/status" }
+  "routes": [
+    { "src": "/api/factcheck", "dest": "/api/factcheck.js" },
+    { "src": "/api/status", "dest": "/api/status.js" },
+    { "src": "/", "dest": "/api/status.js" }
   ],
   "env": {
     "NODE_ENV": "production"

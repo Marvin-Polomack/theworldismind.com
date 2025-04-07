@@ -1,5 +1,4 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { checkGroqHealth } from '../src/services/groqService';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -18,21 +17,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   
   try {
-    // Check the health of the Groq API
-    const health = await checkGroqHealth();
+    // Check if GROQ API key is set
+    const groqKeyStatus = process.env.GROQ_API_KEY ? 'configured' : 'missing';
     
     return res.status(200).json({
       service: 'TWIMChat Fact-Checking API',
       status: 'active',
       version: '1.0.0',
-      groq_status: health.status,
+      environment: process.env.NODE_ENV || 'development',
+      groq_api: groqKeyStatus,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.error('Error checking service health:', error);
     return res.status(500).json({
       service: 'TWIMChat Fact-Checking API',
-      status: 'degraded',
+      status: 'error',
       version: '1.0.0',
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString()

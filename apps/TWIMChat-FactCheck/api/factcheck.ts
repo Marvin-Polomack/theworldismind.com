@@ -1,36 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { checkMessageFacts } from '../src/services/groqService';
-import cors from 'cors';
-
-// CORS headers
-const allowedOrigins = [
-  'https://theworldismind.com',
-  'https://www.theworldismind.com',
-  'https://twimchat.vercel.app',
-  'https://twim-chat.vercel.app',
-  'http://localhost:3000'
-];
-
-// API Key validation
-const validateApiKey = (req: VercelRequest): boolean => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) return true; // No API key configured, skip validation
-  
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
-  
-  const token = authHeader.split(' ')[1];
-  return token === apiKey;
-};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS handling
-  const origin = req.headers.origin as string;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  }
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
   // Handle OPTIONS request for CORS preflight
   if (req.method === 'OPTIONS') {
@@ -39,19 +14,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   
   // Only allow POST method
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ 
+      error: 'Method not allowed',
+      message: 'Only POST requests are supported for this endpoint'
+    });
   }
-  
-  // Validate API Key
-  if (!validateApiKey(req)) {
-    return res.status(401).json({ error: 'Unauthorized' });
+
+  // Check if GROQ API key is set
+  if (!process.env.GROQ_API_KEY) {
+    return res.status(500).json({
+      error: 'Configuration error',
+      message: 'GROQ_API_KEY environment variable is not set'
+    });
   }
   
   try {
-    const { message, context = {} } = req.body;
+    const { message, context = {} } = req.body || {};
     
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({ error: 'Invalid request: message is required' });
+      return res.status(400).json({ 
+        error: 'Invalid request', 
+        message: 'Message is required and must be a string'
+      });
     }
     
     // Process fact checking
@@ -61,7 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Error handling fact check request:', error);
     return res.status(500).json({
       error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error occurred'
     });
   }
 } 
