@@ -1,11 +1,17 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "outputDirectory": "api",
   "rewrites": [
     { "source": "/", "destination": "/api/status" },
     { "source": "/api/:path*", "destination": "/api/:path*" }
   ],
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "env": {
     "NODE_ENV": "production"
   }

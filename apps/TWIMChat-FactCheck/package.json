@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "rm -rf dist && rm -rf api && tsc && mkdir -p api && cp -r dist/api/* api/ && find api -name '*.js' -exec sed -i.bak -e 's#\\.\\./#/var/task/apps/TWIMChat-FactCheck/#g' {} \\; && find api -name '*.bak' -delete",
+    "build": "chmod +x ./vercel-build.sh && ./vercel-build.sh",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "test": "jest",
