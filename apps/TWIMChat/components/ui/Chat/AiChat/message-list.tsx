@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/misc/button"
 import { User, Mail, MapPin, MessageSquare } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
+import { FactCheckBubble } from "./fact-check-bubble"
+import { FactCheckMessage } from "@/types/fact-check"
 
 interface MessageListProps {
   messages: Message[]
+  factCheckMessages?: FactCheckMessage[]
   isTyping?: boolean
   messageOptions?: (message: Message) => { actions: React.ReactNode }
   currentUser?: any
@@ -17,6 +20,7 @@ interface MessageListProps {
 
 export function MessageList({ 
   messages, 
+  factCheckMessages = [],
   isTyping, 
   messageOptions,
   currentUser,
@@ -28,7 +32,7 @@ export function MessageList({
   // Scroll to bottom whenever messages change or component mounts
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages, isTyping])
+  }, [messages, factCheckMessages, isTyping])
 
   const UserAvatar = ({ user, isSender }: { user: any; isSender: boolean }) => (
     <Popover>
@@ -106,46 +110,79 @@ export function MessageList({
     </Popover>
   )
 
-  return (
-    <div className="w-full px-4 space-y-6 min-h-0">
-      {messages.map((message) => {
-        const isSender = message.role === "sender"
-        const user = isSender ? currentUser : otherUser
-        
-        return (
+  // Find the fact check message for a given message
+  const getFactCheckForMessage = (messageId: number) => {
+    return factCheckMessages?.find(fcm => fcm.message_id === messageId);
+  };
+
+  // Combine messages and fact-checks for rendering
+  const renderMessages = () => {
+    const combinedMessages: React.ReactElement[] = [];
+    
+    messages.forEach((message) => {
+      const isSender = message.role === "sender"
+      const user = isSender ? currentUser : otherUser
+      
+      // Add the original message
+      combinedMessages.push(
+        <div
+          key={message.id}
+          className={`flex items-start gap-4 ${
+            isSender ? "flex-row-reverse" : "flex-row"
+          }`}
+        >
+          <UserAvatar user={user} isSender={isSender} />
+          
           <div
-            key={message.id}
-            className={`flex items-start gap-4 ${
-              isSender ? "flex-row-reverse" : "flex-row"
+            className={`group relative flex w-full flex-col ${
+              isSender ? "items-end" : "items-start"
             }`}
           >
-            <UserAvatar user={user} isSender={isSender} />
-            
-            <div
-              className={`group relative flex w-full flex-col ${
-                isSender ? "items-end" : "items-start"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <div
-                  className={`rounded-lg px-3 py-2 ${
-                    isSender
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
-                  }`}
-                >
-                  {message.message}
-                </div>
-                {messageOptions && (
-                  <div className="flex items-center opacity-0 transition-opacity group-hover:opacity-100">
-                    {messageOptions(message).actions}
-                  </div>
-                )}
+            <div className="flex items-center gap-2">
+              <div
+                className={`rounded-lg px-3 py-2 ${
+                  isSender
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted"
+                }`}
+              >
+                {message.message}
               </div>
+              {messageOptions && (
+                <div className="flex items-center opacity-0 transition-opacity group-hover:opacity-100">
+                  {messageOptions(message).actions}
+                </div>
+              )}
             </div>
           </div>
-        )
-      })}
+        </div>
+      );
+      
+      // Add the fact-check if it exists
+      const factCheck = getFactCheckForMessage(message.id);
+      if (factCheck && factCheck.contains_claims) {
+        combinedMessages.push(
+          <div key={`fc-${message.id}`} className="flex items-start gap-4">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="/ai-avatar.png" alt="Fact Checker" />
+              <AvatarFallback>FC</AvatarFallback>
+            </Avatar>
+            
+            <div className="group relative flex w-full flex-col items-start">
+              <FactCheckBubble factCheckResult={factCheck} />
+            </div>
+          </div>
+        );
+      }
+    });
+    
+    return combinedMessages;
+  };
+
+  return (
+    <div className="w-full px-4 space-y-6 min-h-0">
+      {renderMessages()}
+
       {isTyping && (
         <div className="flex items-center gap-4">
           <UserAvatar user={otherUser} isSender={false} />

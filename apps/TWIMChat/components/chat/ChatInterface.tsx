@@ -11,6 +11,7 @@ import { getUser } from "@/utils/supabase/queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/misc/avatar";
 import { set } from "react-hook-form";
 import { use100vh } from 'react-div-100vh';
+import { FactCheckMessage } from "@/types/fact-check";
 
 type TypingStatus = {
   room_id: string
@@ -27,6 +28,10 @@ type Message = {
   created_at: Date;
 };
 
+// Base URL for fact-check API
+const FACT_CHECK_API_URL = process.env.NEXT_PUBLIC_FACT_CHECK_API_URL || 'http://localhost:3001/api/factcheck';
+const FACT_CHECK_API_KEY = process.env.NEXT_PUBLIC_FACT_CHECK_API_KEY;
+
 export default function ChatInterface({ 
   topic_id,
   userId,
@@ -41,6 +46,7 @@ export default function ChatInterface({
 ) {
   const supabase = createClient()
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [factCheckMessages, setFactCheckMessages] = useState<FactCheckMessage[]>([]);
   const [typingUsers, setTypingUsers] = useState<TypingStatus[]>([]);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -97,6 +103,19 @@ export default function ChatInterface({
     const res = await fetch(`/api/chat/${roomId}/messages`);
     const messages = await res.json();
     setChatMessages(messages);
+    
+    // Also fetch fact-check messages
+    const { data: factCheckData, error } = await supabase
+      .schema('chat')
+      .from('fact_checks')
+      .select('*')
+      .eq('room_id', roomId);
+      
+    if (error) {
+      console.error('Error fetching fact checks:', error);
+    } else if (factCheckData) {
+      setFactCheckMessages(factCheckData as FactCheckMessage[]);
+    }
   };
   
   useEffect(() => {
@@ -215,6 +234,128 @@ export default function ChatInterface({
     };
   }, [roomId, supabase, otherUserId]);
 
+  // Function to check facts for a given message
+  const checkFactsForMessage = async (message: Message) => {
+    if (!FACT_CHECK_API_KEY) {
+      console.warn('Fact check API key is not set, skipping fact check');
+      return;
+    }
+    
+    try {
+      // Check if a fact check already exists for this message
+      const { data: existingCheck } = await supabase
+        .schema('chat')
+        .from('fact_checks')
+        .select('id')
+        .eq('room_id', roomId)
+        .eq('message_id', message.id)
+        .maybeSingle();
+      
+      if (existingCheck) {
+        // Skip fact checking if already done for this message
+        console.log('Fact check already exists for message:', message.id);
+        return;
+      }
+      
+      // Get recent message history for context
+      const recentMessages = chatMessages
+        .slice(-5) // Get last 5 messages for context
+        .map(m => `${m.role === 'sender' ? 'User1' : 'User2'}: ${m.message}`)
+        .join('\n');
+        
+      const response = await fetch(FACT_CHECK_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${FACT_CHECK_API_KEY}`
+        },
+        body: JSON.stringify({
+          message: message.message,
+          context: {
+            history: recentMessages
+          }
+        })
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Failed to check facts: ${response.statusText}`, errorText);
+        throw new Error(`Failed to check facts: ${response.status} - ${response.statusText}`);
+      }
+      
+      const factCheckResult = await response.json();
+      
+      if (factCheckResult.contains_claims) {
+        try {
+          // Use upsert instead of insert to avoid duplicate key errors
+          const { data: insertedData, error } = await supabase
+            .schema('chat')
+            .from('fact_checks')
+            .upsert(
+              {
+                room_id: roomId,
+                message_id: message.id,
+                original_message: message.message,
+                claims: factCheckResult.claims,
+                summary: factCheckResult.summary,
+                contains_claims: factCheckResult.contains_claims,
+                timestamp: factCheckResult.timestamp || new Date().toISOString()
+              },
+              { 
+                onConflict: 'room_id,message_id',
+                ignoreDuplicates: true
+              }
+            )
+            .select()
+            .maybeSingle();
+            
+          if (error) {
+            // Handle database insert error
+            console.error('Error upserting fact check:', error);
+            
+            if (error.code === '23505') {
+              console.log('Duplicate fact check detected, fetching existing record');
+              
+              // Add a small delay to ensure the record is fully written
+              await new Promise(resolve => setTimeout(resolve, 500));
+              
+              // Fetch the existing record
+              const { data: existingData, error: fetchError } = await supabase
+                .schema('chat')
+                .from('fact_checks')
+                .select('*')
+                .eq('room_id', roomId)
+                .eq('message_id', message.id)
+                .single();
+                
+              if (fetchError) {
+                console.error('Error fetching existing fact check:', fetchError);
+              } else if (existingData) {
+                console.log('Retrieved existing fact check record');
+                setFactCheckMessages(prev => 
+                  prev.some(fc => fc.id === existingData.id) 
+                    ? prev 
+                    : [...prev, existingData as FactCheckMessage]
+                );
+              }
+            }
+          } else if (insertedData) {
+            console.log('Successfully inserted/updated fact check');
+            setFactCheckMessages(prev => {
+              // Avoid duplicates in state
+              const exists = prev.some(fc => fc.id === insertedData.id);
+              return exists ? prev : [...prev, insertedData as FactCheckMessage];
+            });
+          }
+        } catch (dbError) {
+          console.error('Database error while storing fact check:', dbError);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking facts:', error);
+    }
+  };
+
   // Listen for new messages in real time
   useEffect(() => {
     const channel = supabase
@@ -236,6 +377,9 @@ export default function ChatInterface({
           };
 
           setChatMessages((current) => [...current, messageWithDate]);
+          
+          // Check facts for the new message
+          checkFactsForMessage(messageWithDate);
         }
       )
       .subscribe();
@@ -243,7 +387,31 @@ export default function ChatInterface({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, supabase, userId]);
+  }, [roomId, supabase, userId]); // Removed chatMessages dependency
+
+  // Also listen for new fact-check entries
+  useEffect(() => {
+    const channel = supabase
+      .channel('fact-checks')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'chat',
+          table: 'fact_checks',
+          filter: `room_id=eq.${roomId}`
+        },
+        (payload) => {
+          const newFactCheck = payload.new as FactCheckMessage;
+          setFactCheckMessages((current) => [...current, newFactCheck]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [roomId, supabase]);
 
   // Custom handleSubmit to insert messages into Supabase
   const customHandleSubmit = async (event?: { preventDefault?: (() => void) | undefined }, options?: { experimental_attachments?: FileList }) => {
@@ -310,6 +478,7 @@ export default function ChatInterface({
           <ChatMessages messages={chatMessages}>
             <MessageList 
               messages={chatMessages} 
+              factCheckMessages={factCheckMessages}
               isTyping={typingUsers.length > 0} 
               currentUser={currentUser} 
               otherUser={otherUser}
