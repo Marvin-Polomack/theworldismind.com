@@ -1,5 +1,5 @@
 import { Groq } from "groq-sdk";
-import { FactCheckContext, FactCheckResult, HealthCheckResult } from "../types";
+import { FactCheckContext, FactCheckResult, HealthCheckResult } from "../types/index.js";
 
 // Groq API configuration
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';

@@ -9,7 +9,7 @@ console.log('GROQ_MODEL:', process.env.GROQ_MODEL);
 
 import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import cors from 'cors';
-import factCheckRouter from './routes/factCheck';
+import factCheckRouter from './routes/factCheck.js';
 
 const app = express();
 const PORT = process.env.PORT || 3002;

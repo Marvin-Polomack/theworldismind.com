@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { checkMessageFacts, checkGroqHealth } from '../services/groqService';
-import { apiKeyAuth } from '../middleware/auth';
-import { FactCheckContext } from '../types';
+import { checkMessageFacts, checkGroqHealth } from '../services/groqService.js';
+import { apiKeyAuth } from '../middleware/auth.js';
+import { FactCheckContext } from '../types/index.js';
 import { z } from 'zod';
 
 const router = Router();
