@@ -1,10 +1,15 @@
 import dotenv from 'dotenv';
+// Load environment variables first
+dotenv.config({ path: '.env' });
+
+// Debug logging
+console.log('Environment variables loaded:');
+console.log('GROQ_API_KEY exists:', !!process.env.GROQ_API_KEY);
+console.log('GROQ_MODEL:', process.env.GROQ_MODEL);
+
 import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import factCheckRouter from './routes/factCheck';
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;

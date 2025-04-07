@@ -5,6 +5,10 @@ import { FactCheckContext, FactCheckResult, HealthCheckResult } from "../types";
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama3-70b-8192';
 
+// Debug logging
+console.log('Groq API Key length:', GROQ_API_KEY.length);
+console.log('Groq Model:', GROQ_MODEL);
+
 // Initialize Groq client
 const groq = new Groq({
   apiKey: GROQ_API_KEY,
