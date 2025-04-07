@@ -6,7 +6,7 @@
   "framework": null,
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/api/factcheck/(.*)", "destination": "/apps/TWIMChat-FactCheck/dist/index.js" },
-    { "source": "/(.*)", "destination": "/apps/TWIMChat" }
+    { "source": "/api/factcheck/:path*", "destination": "/apps/TWIMChat-FactCheck/api/:path*" },
+    { "source": "/(.*)", "destination": "/apps/TWIMChat/$1" }
   ]
 } 
