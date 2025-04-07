@@ -18,7 +18,9 @@ const PORT = process.env.PORT || 3002;
 app.use(cors({
   origin: [
     'https://theworldismind.com',
+    'https://www.theworldismind.com',
     'https://twimchat.vercel.app',
+    'https://twim-chat.vercel.app',
     'http://localhost:3000'
   ],
   methods: ['GET', 'POST'],
