@@ -1,7 +1,5 @@
 import { Groq } from "groq-sdk";
 import { FactCheckContext, FactCheckResult, HealthCheckResult } from "../types";
-// Import using a working approach
-import * as francMin from 'franc-min';
 
 // Groq API configuration
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
@@ -21,15 +19,17 @@ const groq = new Groq({
  * @param text - The text to analyze
  * @returns The detected language code (ISO 639-3) or 'eng' if not detected
  */
-function detectLanguage(text: string): string {
+async function detectLanguage(text: string): Promise<string> {
   try {
     // We need at least some text to detect the language
     if (!text || text.length < 10) {
       return 'eng'; // Default to English for very short texts
     }
     
+    // Dynamically import franc-min
+    const francMin = await import('franc-min');
+    
     // Detect language (returns ISO 639-3 code)
-    // Use the default function export from franc-min
     const detectedLanguage = francMin.franc(text);
     console.log('Detected language:', detectedLanguage);
     
@@ -85,7 +85,7 @@ export async function checkMessageFacts(
 ): Promise<FactCheckResult> {
   try {
     // Detect the language of the message
-    const detectedLanguageCode = detectLanguage(message);
+    const detectedLanguageCode = await detectLanguage(message);
     const detectedLanguageName = getLanguageName(detectedLanguageCode);
     
     // Create a prompt for fact-checking
