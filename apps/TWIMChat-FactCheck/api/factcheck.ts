@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { checkMessageFacts } from '../src/services/groqService';
+import { checkMessageFacts } from '../src/services/groqService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers

@@ -1,4 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { checkGroqHealth } from '../src/services/groqService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -20,12 +21,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Check if GROQ API key is set
     const groqKeyStatus = process.env.GROQ_API_KEY ? 'configured' : 'missing';
     
+    // Check Groq API health
+    let groqHealth = null;
+    if (process.env.GROQ_API_KEY) {
+      try {
+        groqHealth = await checkGroqHealth();
+      } catch (error) {
+        console.error('Error checking Groq health:', error);
+        groqHealth = { status: 'error', api_reachable: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+    
     return res.status(200).json({
       service: 'TWIMChat Fact-Checking API',
       status: 'active',
       version: '1.0.0',
       environment: process.env.NODE_ENV || 'development',
       groq_api: groqKeyStatus,
+      groq_health: groqHealth,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
