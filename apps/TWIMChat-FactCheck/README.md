@@ -35,7 +35,7 @@ This service is built with TypeScript and designed for deployment on Vercel.
 
 ## Environment Variables
 
-- `PORT`: Port on which the server will run locally (default: 3000)
+- `PORT`: Port on which the server will run locally (default: 3002)
 - `GROQ_API_KEY`: Your Groq API key (required)
 - `GROQ_MODEL`: Model to use for fact-checking (default: llama3-70b-8192)
 - `API_KEY`: Optional API key for authentication

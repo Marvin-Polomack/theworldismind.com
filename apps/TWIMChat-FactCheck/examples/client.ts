@@ -7,7 +7,7 @@ import axios from 'axios';
 import { FactCheckContext, FactCheckResult, HealthCheckResult } from '../src/types';
 
 // Configuration
-const API_URL = process.env.FACTCHECK_API_URL || 'http://localhost:3001/api/factcheck';
+const API_URL = process.env.FACTCHECK_API_URL || 'http://localhost:3002/api/factcheck';
 const API_KEY = process.env.FACTCHECK_API_KEY; // Optional
 
 /**

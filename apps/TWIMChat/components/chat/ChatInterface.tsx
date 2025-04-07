@@ -29,7 +29,7 @@ type Message = {
 };
 
 // Base URL for fact-check API
-const FACT_CHECK_API_URL = process.env.NEXT_PUBLIC_FACT_CHECK_API_URL || 'http://localhost:3001/api/factcheck';
+const FACT_CHECK_API_URL = process.env.NEXT_PUBLIC_FACT_CHECK_API_URL || 'https://twimchat-fact-check.vercel.app/api/factcheck';
 const FACT_CHECK_API_KEY = process.env.NEXT_PUBLIC_FACT_CHECK_API_KEY;
 
 export default function ChatInterface({ 
