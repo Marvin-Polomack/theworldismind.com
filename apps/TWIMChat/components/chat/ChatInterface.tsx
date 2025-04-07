@@ -28,9 +28,8 @@ type Message = {
   created_at: Date;
 };
 
-// Base URL for fact-check API
-const FACT_CHECK_API_URL = process.env.NEXT_PUBLIC_FACT_CHECK_API_URL || 'https://twim-chat-fact-check.vercel.app/api/factcheck';
-const FACT_CHECK_API_KEY = process.env.NEXT_PUBLIC_FACT_CHECK_API_KEY;
+// Base URL for fact-check API - now using our own internal API route
+const FACT_CHECK_API_URL = '/api/factcheck';
 
 export default function ChatInterface({ 
   topic_id,
@@ -236,11 +235,6 @@ export default function ChatInterface({
 
   // Function to check facts for a given message
   const checkFactsForMessage = async (message: Message) => {
-    if (!FACT_CHECK_API_KEY) {
-      console.warn('Fact check API key is not set, skipping fact check');
-      return;
-    }
-    
     try {
       // Check if a fact check already exists for this message
       const { data: existingCheck } = await supabase
@@ -266,8 +260,7 @@ export default function ChatInterface({
       const response = await fetch(FACT_CHECK_API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${FACT_CHECK_API_KEY}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           message: message.message,
