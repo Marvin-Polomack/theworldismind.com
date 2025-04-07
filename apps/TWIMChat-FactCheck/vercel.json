@@ -1,16 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "functions": {
-    "dist/api/*.js": {
-      "runtime": "@vercel/node@1.15.4"
-    }
-  },
-  "routes": [
-    { "src": "/", "dest": "/dist/api/index.js" },
-    { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
-  ],
   "env": {
     "NODE_ENV": "production"
   }
