@@ -5,14 +5,19 @@
   "installCommand": "npm install",
   "framework": null,
   "outputDirectory": ".",
-  "rewrites": [
+  "routes": [
     { 
-      "source": "/api/factcheck/:path*", 
-      "destination": "/apps/TWIMChat-FactCheck/dist/index.js"
+      "src": "/api/factcheck", 
+      "methods": ["POST", "OPTIONS"],
+      "dest": "/apps/TWIMChat-FactCheck/dist/index.js"
     },
     { 
-      "source": "/(.*)", 
-      "destination": "/apps/TWIMChat/$1" 
+      "src": "/api/factcheck/(.*)", 
+      "dest": "/apps/TWIMChat-FactCheck/dist/index.js"
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "/apps/TWIMChat/$1" 
     }
   ]
 } 
